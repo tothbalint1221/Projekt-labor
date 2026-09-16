@@ -20,4 +20,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+
+    private void LoadData()
+    {
+        using var db = new AppDbContext();
+    }
 }
