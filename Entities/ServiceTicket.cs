@@ -1,8 +1,9 @@
+using ServiceManagerApp.Entities;
+
 namespace ServiceManagerApp;
 
-public class ServiceTicket
+public class ServiceTicket : BaseEntity
 {
-    public int ServiceTicketId { get; set; }
     public int? UserId { get; set; }
     public User? User { get; set; }
     public int EquipmentId { get; set; }

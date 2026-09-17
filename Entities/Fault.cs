@@ -1,8 +1,9 @@
+using ServiceManagerApp.Entities;
+
 namespace ServiceManagerApp;
 
-public class Fault
+public class Fault : BaseEntity
 {
-    public int FaultId { get ; set; }
     public int EquipmentId { get; set; }
     public Equipment Equipment { get; set; } = null!;
     public string FaultName { get; set; } = string.Empty;

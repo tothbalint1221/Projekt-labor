@@ -1,8 +1,9 @@
+using ServiceManagerApp.Entities;
+
 namespace ServiceManagerApp;
 
-public class Equipment
+public class Equipment : BaseEntity
 {
-    public int EquipmentId { get; set; }
     public int CustomerId { get; set; }
     public Customer Customer { get; set; } = null!;
     public string Category { get; set; } = string.Empty;
