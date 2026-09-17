@@ -1,13 +1,6 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
 
@@ -16,13 +9,23 @@ namespace ServiceManagerApp;
 /// </summary>
 public partial class MainWindow : Window
 {
-    public MainWindow()
+    private readonly UserRepository userRepository;
+
+    public MainWindow(UserRepository userRepository)
     {
         InitializeComponent();
+        this.userRepository = userRepository;
     }
 
-    private void LoadData()
+    private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        using var db = new AppDbContext();
+        await LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        var users = await userRepository.GetAllAsync();
+        Debug.WriteLine("Loaded users: " + users.Count);
+        CustomerDataGrid.ItemsSource = users;
     }
 }
