@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServiceManagerApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Szervízkezelő" Height="450" Width="800"
+        Background="#1E1E2E" Foreground="#EAEAF0">
     <Grid>
+        <StackPanel Width="300"
+                    HorizontalAlignment="Center"          
+                    VerticalAlignment="Center">
 
+            <TextBlock x:Name="Login" Text="Bejelentkezés" 
+                       FontSize="28" 
+                       FontWeight="SemiBold"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,24"/>
+            <TextBox x:Name="UsernameTextBox" TextWrapping="Wrap" Height="36" Background="#FF2A2A3C" Foreground="White"/>
+
+        </StackPanel>
     </Grid>
 </Window>
