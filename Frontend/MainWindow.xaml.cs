@@ -17,15 +17,6 @@ public partial class MainWindow : Window
         this.userRepository = userRepository;
     }
 
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-        await LoadDataAsync();
-    }
+    
 
-    private async Task LoadDataAsync()
-    {
-        var users = await userRepository.GetAllAsync();
-        Debug.WriteLine("Loaded users: " + users.Count);
-        CustomerDataGrid.ItemsSource = users;
-    }
 }

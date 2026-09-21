@@ -5,11 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServiceManagerApp"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
         Title="Szervízkezelő" Height="450" Width="800"
         Background="#1E1E2E" Foreground="#EAEAF0">
-
-    <DataGrid x:Name="CustomerDataGrid" d:ItemsSource="{d:SampleData ItemCount=5}"/>
     <Grid>
         <StackPanel Width="300"
                     HorizontalAlignment="Center"          
