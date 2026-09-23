@@ -34,5 +34,11 @@ namespace ServiceManagerApp.Repositories
         {
             await context.SaveChangesAsync();
         }
+
+        public virtual async Task DeleteAsync(T entity, bool save = true)
+        {
+            context.Remove(entity);
+            if (save) await context.SaveChangesAsync();
+        }
     }
 }
