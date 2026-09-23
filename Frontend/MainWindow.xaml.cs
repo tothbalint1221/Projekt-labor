@@ -15,8 +15,6 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         this.userRepository = userRepository;
+
     }
-
-    
-
 }

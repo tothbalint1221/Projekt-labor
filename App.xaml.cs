@@ -20,7 +20,7 @@ public partial class App : Application
 		host = Host.CreateDefaultBuilder()
 			.ConfigureServices(services =>
 			{
-				services.AddDbContext<AppDbContext>();
+				services.AddDbContext<AppDbContext>(ServiceLifetime.Transient);
 
 				services.AddTransient<CustomerRepository>();
 				services.AddTransient<EquipmentRepository>();
@@ -30,6 +30,8 @@ public partial class App : Application
 				services.AddTransient<TicketPartRepository>();
 				services.AddTransient<UserRepository>();
 				services.AddTransient<MainWindow>();
+				services.AddTransient<CustomerWindow>();
+				services.AddTransient<EquipmentWindow>();
 			})
 			.Build();
 
