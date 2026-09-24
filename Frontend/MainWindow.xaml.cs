@@ -17,6 +17,8 @@ public partial class MainWindow : Window
         this.userRepository = userRepository;
     }
 
-    
+    private void LoginButton_Click(object sender, RoutedEventArgs e)
+    {
 
+    }
 }
