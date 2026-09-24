@@ -19,7 +19,7 @@
                        HorizontalAlignment="Center"
                        Margin="0,0,0,24"/>
             <TextBlock x:Name="UsernameTBlock" TextWrapping="Wrap" Text="Username" Margin="0,0,0,6"/>
-            <4 x:Name="UsernameTextBox" Height="36" Background="#FF2A2A3C" Foreground="White" FontSize="16" VerticalContentAlignment="Center" Padding="8,0,8,0"/>
+            <TextBox x:Name="UsernameTextBox" Height="36" Background="#FF2A2A3C" Foreground="White" FontSize="16" VerticalContentAlignment="Center" Padding="8,0,8,0"/>
             <TextBlock x:Name="PasswordTBlock" TextWrapping="Wrap" Text="Password" Margin="0,12,0,6"/>
             <PasswordBox x:Name="PasswordInput" Height="36" Background="#FF2A2A3C" Foreground="White" FontSize="16" Padding="8,0,8,0" VerticalContentAlignment="Center" />
             <!--Margin="BAL,FEL,JOBB,LE" -->
