@@ -13,4 +13,5 @@ public class ServiceTicket : BaseEntity
     public Status Status { get; set;} = Status.Accepted;
     public decimal LaborCost { get; set; }
     public decimal Price { get; set; }
+    public List<TicketPart> TicketParts { get; set; } = new();
 }
