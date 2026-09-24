@@ -5,20 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ServiceManagerApp"
         mc:Ignorable="d"
-        Title="Szervízkezelő" Height="450" Width="800"
+        Title="Service Manager" Height="450" Width="800"
         Background="#1E1E2E" Foreground="#EAEAF0">
     <Grid>
         <StackPanel Width="300"
                     HorizontalAlignment="Center"          
                     VerticalAlignment="Center">
 
-            <TextBlock x:Name="Login" Text="Bejelentkezés" 
+            <TextBlock x:Name="SignInTextBlock" Text="Sign in" 
                        FontSize="28" 
                        FontWeight="SemiBold"
                        Foreground="White"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,24"/>
-            <TextBox x:Name="UsernameTextBox" TextWrapping="Wrap" Height="36" Background="#FF2A2A3C" Foreground="White"/>
+            <TextBlock x:Name="UsernameTBlock" TextWrapping="Wrap" Text="Username" Margin="0,0,0,6"/>
+            <4 x:Name="UsernameTextBox" Height="36" Background="#FF2A2A3C" Foreground="White" FontSize="16" VerticalContentAlignment="Center" Padding="8,0,8,0"/>
+            <TextBlock x:Name="PasswordTBlock" TextWrapping="Wrap" Text="Password" Margin="0,12,0,6"/>
+            <PasswordBox x:Name="PasswordInput" Height="36" Background="#FF2A2A3C" Foreground="White" FontSize="16" Padding="8,0,8,0" VerticalContentAlignment="Center" />
+            <!--Margin="BAL,FEL,JOBB,LE" -->
+            <Button x:Name="LoginButton" Content="Sign in" Margin="0,20,0,0" Height="40" Background="#FF247A62" Foreground="White" IsDefault="True"/>
 
         </StackPanel>
     </Grid>
