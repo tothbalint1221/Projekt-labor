@@ -1,0 +1,25 @@
+﻿<Window x:Class="ServiceManagerApp.Frontend.MenuWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ServiceManagerApp.Frontend"
+        mc:Ignorable="d"
+        Title="Service Manager" Height="700" Width="1100" Background="#FF1E1E2E" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Grid.Column="0" Background="#161622">
+            <StackPanel Margin="16">
+                <Button x:Name="CustomersButton" Content="Customers" Height="40" Margin="0,8,0,0" 
+                        Click="CustomersButton_Click"/>
+                <Button x:Name="ServiceTicketsButton" Content="Service tickets" Height="40" Margin="0,8,0,0" 
+                        Click="ServiceTicketsButton_Click"/>
+                <Button x:Name="PartsButton" Content="Parts" Height="40" Margin="0,8,0,0" 
+                        Click="PartsButton_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
