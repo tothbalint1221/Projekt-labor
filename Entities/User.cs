@@ -9,4 +9,5 @@ public class User : BaseEntity
     public string Phonenumber { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Address { get; set; } = string.Empty;
+    public Role Role { get; set; } = Role.Technician;
 }
