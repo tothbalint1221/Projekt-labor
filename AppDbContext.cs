@@ -24,24 +24,47 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // Customer konfiguráció
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+
+            entity.HasMany(c => c.Equipments)
+                .WithOne(e => e.Customer)
+                .HasForeignKey(e => e.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Equipment konfiguráció (Faults lista nélkül)
         modelBuilder.Entity<Equipment>(entity =>
         {
+            entity.HasKey(e => e.Id);
+
+            entity.HasIndex(e => e.SerialNumber)
+                .IsUnique();
+
             entity.HasOne(e => e.Customer)
                 .WithMany(c => c.Equipments)
                 .HasForeignKey(e => e.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // Fault konfiguráció (Kizárólag ServiceTicket-hez láncolva)
         modelBuilder.Entity<Fault>(entity =>
         {
-            entity.HasOne(f => f.Equipment)
-                .WithMany(e => e.Faults)
-                .HasForeignKey(f => f.EquipmentId)
+            entity.HasKey(f => f.Id);
+
+            entity.HasOne(f => f.ServiceTicket)
+                .WithMany(st => st.Faults)
+                .HasForeignKey(f => f.ServiceTicketId)
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        // ServiceTicket konfiguráció
         modelBuilder.Entity<ServiceTicket>(entity =>
         {
+            entity.HasKey(st => st.Id);
+
             entity.HasOne(st => st.Equipment)
                 .WithMany()
                 .HasForeignKey(st => st.EquipmentId)
@@ -59,8 +82,15 @@ public class AppDbContext : DbContext
                 .HasPrecision(18, 2);
         });
 
+        // TicketPart kapcsolótábla (BaseEntity.Id kulccsal és Price Snapshot-tal)
         modelBuilder.Entity<TicketPart>(entity =>
         {
+            entity.HasKey(tp => tp.Id);
+
+            // Egyedi összetett index: egy alkatrész nem szerepelhet duplán egy munkalapon
+            entity.HasIndex(tp => new { tp.ServiceTicketId, tp.PartId })
+                .IsUnique();
+
             entity.HasOne(tp => tp.ServiceTicket)
                 .WithMany(st => st.TicketParts)
                 .HasForeignKey(tp => tp.ServiceTicketId)
@@ -70,12 +100,27 @@ public class AppDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(tp => tp.PartId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.Property(tp => tp.UnitPrice)
+                .HasPrecision(18, 2);
         });
 
+        // Part törzsadat konfiguráció
         modelBuilder.Entity<Part>(entity =>
         {
+            entity.HasKey(p => p.Id);
+
             entity.Property(p => p.PartCost)
                 .HasPrecision(18, 2);
+        });
+
+        // User konfiguráció
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id);
+
+            entity.HasIndex(u => u.Email)
+                .IsUnique();
         });
     }
 }
