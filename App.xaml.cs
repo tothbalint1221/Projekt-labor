@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
@@ -30,6 +31,7 @@ public partial class App : Application
 				services.AddTransient<CustomerWindow>();
 				services.AddTransient<EquipmentWindow>();
 				services.AddTransient<DataSeeder>();
+				services.AddTransient<MenuWindow>();
 			})
 			.Build();
 

@@ -9,4 +9,5 @@ public class TicketPart : BaseEntity
     public int PartId { get; set; }
     public Part Part { get; set; } = null!;
     public int Quantity { get; set; } = 1;
+    public decimal UnitPrice { get; set;}
 }
