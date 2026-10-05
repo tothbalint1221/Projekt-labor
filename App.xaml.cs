@@ -5,9 +5,6 @@ using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
 	private IHost? host;
@@ -32,11 +29,16 @@ public partial class App : Application
 				services.AddTransient<MainWindow>();
 				services.AddTransient<CustomerWindow>();
 				services.AddTransient<EquipmentWindow>();
+				services.AddTransient<DataSeeder>();
 			})
 			.Build();
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
+
+		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+		await seeder.SeedAsync();
+
 		scope.ServiceProvider.GetRequiredService<MainWindow>().Show();
 	}
 
