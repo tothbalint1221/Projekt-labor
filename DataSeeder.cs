@@ -40,8 +40,8 @@ public class DataSeeder
             await SeedCustomersAsync();
             await SeedPartsAsync();
             await SeedEquipmentAsync();
-            await SeedFaultsAsync();
             await SeedServiceTicketsAsync();
+            await SeedFaultsAsync();
             await SeedTicketPartsAsync();
 
             Debug.WriteLine("Database seeding completed");
@@ -225,24 +225,32 @@ public class DataSeeder
                 Brand = "HP",
                 Model = "ProDesk 400",
                 SerialNumber = "HP-PRO-001"
-            },
-            new Equipment
+            }
+        };
+
+        if (customers.Count > 1)
+        {
+            equipment.Add(new Equipment
             {
                 CustomerId = customers[1].Id,
                 Category = "Printer",
                 Brand = "Brother",
                 Model = "HL-L2350DW",
                 SerialNumber = "BROTHER-PRN-001"
-            },
-            new Equipment
+            });
+        }
+
+        if (customers.Count > 2)
+        {
+            equipment.Add(new Equipment
             {
                 CustomerId = customers[2].Id,
                 Category = "Server",
                 Brand = "Lenovo",
                 Model = "ThinkSystem SR650",
                 SerialNumber = "LENOVO-SRV-001"
-            }
-        };
+            });
+        }
 
         foreach (var equip in equipment)
         {
@@ -261,37 +269,47 @@ public class DataSeeder
             return;
         }
 
-        var equipment = await _equipmentRepository.GetAllAsync();
-        if (equipment.Count == 0)
+        var tickets = await _serviceTicketRepository.GetAllAsync();
+        if (tickets.Count == 0)
             return;
 
-        var faults = new List<Fault>
+        var faults = new List<Fault>();
+
+        if (tickets.Count > 0)
         {
-            new Fault
+            faults.Add(new Fault
             {
-                EquipmentId = equipment[0].Id,
+                ServiceTicketId = tickets[0].Id,
                 FaultName = "Villogo kijelzo",
                 Diagnosis = "LCD panelen meghibasodott",
                 Repairs = "LCD panel kicserelve",
                 Status = Status.Finished
-            },
-            new Fault
+            });
+        }
+
+        if (tickets.Count > 1)
+        {
+            faults.Add(new Fault
             {
-                EquipmentId = equipment[1].Id,
+                ServiceTicketId = tickets[1].Id,
                 FaultName = "Gep nem kapcsol be",
                 Diagnosis = "Hibas tapegyseg",
                 Repairs = "Tapegyseg kicserelve",
                 Status = Status.Finished
-            },
-            new Fault
+            });
+        }
+
+        if (tickets.Count > 2)
+        {
+            faults.Add(new Fault
             {
-                EquipmentId = equipment[2].Id,
+                ServiceTicketId = tickets[2].Id,
                 FaultName = "Beragadt papir",
                 Diagnosis = "Papir beragadt az adagolo rendszerben",
                 Repairs = "Papir eltavolitva, adagolo rendszert kitisztitva",
-                Status = Status.Finished
-            }
-        };
+                Status = Status.Accepted
+            });
+        }
 
         foreach (var fault in faults)
         {
@@ -316,9 +334,11 @@ public class DataSeeder
         if (equipment.Count == 0 || users.Count == 0)
             return;
 
-        var tickets = new List<ServiceTicket>
+        var tickets = new List<ServiceTicket>();
+
+        if (equipment.Count > 0 && users.Count > 0)
         {
-            new ServiceTicket
+            tickets.Add(new ServiceTicket
             {
                 UserId = users[0].Id,
                 EquipmentId = equipment[0].Id,
@@ -327,8 +347,12 @@ public class DataSeeder
                 Status = Status.Finished,
                 LaborCost = 5000.00m,
                 Price = 20000.00m // THESE ARE EXAMPLES VALUES, WILL BE AUTO CALCULATED
-            },
-            new ServiceTicket
+            });
+        }
+
+        if (equipment.Count > 1 && users.Count > 1)
+        {
+            tickets.Add(new ServiceTicket
             {
                 UserId = users[1].Id,
                 EquipmentId = equipment[1].Id,
@@ -337,8 +361,12 @@ public class DataSeeder
                 Status = Status.Finished,
                 LaborCost = 5000.00m,
                 Price = 20000.00m
-            },
-            new ServiceTicket
+            });
+        }
+
+        if (equipment.Count > 2 && users.Count > 2)
+        {
+            tickets.Add(new ServiceTicket
             {
                 UserId = users[2].Id,
                 EquipmentId = equipment[2].Id,
@@ -347,8 +375,8 @@ public class DataSeeder
                 Status = Status.Accepted,
                 LaborCost = 5000.00m,
                 Price = 20000.00m
-            }
-        };
+            });
+        }
 
         foreach (var ticket in tickets)
         {
@@ -370,24 +398,27 @@ public class DataSeeder
         var tickets = await _serviceTicketRepository.GetAllAsync();
         var parts = await _partRepository.GetAllAsync();
 
-        if (tickets.Count == 0 || parts.Count == 0)
-            return;
+        var ticketParts = new List<TicketPart>();
 
-        var ticketParts = new List<TicketPart>
+        if (tickets.Count > 0 && parts.Count > 1)
         {
-            new TicketPart
+            ticketParts.Add(new TicketPart
             {
                 ServiceTicketId = tickets[0].Id,
                 PartId = parts[1].Id,
                 Quantity = 1
-            },
-            new TicketPart
+            });
+        }
+
+        if (tickets.Count > 1 && parts.Count > 0)
+        {
+            ticketParts.Add(new TicketPart
             {
                 ServiceTicketId = tickets[1].Id,
                 PartId = parts[0].Id,
                 Quantity = 1
-            }
-        };
+            });
+        }
 
         foreach (var ticketPart in ticketParts)
         {

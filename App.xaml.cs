@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
-using ServiceManagerApp.Frontend;
 
 namespace ServiceManagerApp;
 
