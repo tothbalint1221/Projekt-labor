@@ -1,14 +1,12 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
 using ServiceManagerApp.Frontend;
 
 namespace ServiceManagerApp;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
 	private IHost? host;
@@ -34,12 +32,17 @@ public partial class App : Application
 				services.AddTransient<MainWindow>();
 				services.AddTransient<CustomerView>();
 				services.AddTransient<EquipmentView>();
+				services.AddTransient<DataSeeder>();
+				services.AddTransient<MenuWindow>();
 			})
 			.Build();
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
 		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
+
+		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+		await seeder.SeedAsync();
 	}
 
 	protected override async void OnExit(ExitEventArgs e)

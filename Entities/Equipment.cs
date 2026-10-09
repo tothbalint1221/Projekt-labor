@@ -10,5 +10,4 @@ public class Equipment : BaseEntity
     public string Brand { get; set; } = string.Empty;
     public string Model { get; set; } = string.Empty;
     public string SerialNumber { get; set; } = string.Empty;
-    public List<Fault> Faults { get; set; } = new();
 }
