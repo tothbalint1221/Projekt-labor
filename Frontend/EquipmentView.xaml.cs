@@ -10,12 +10,12 @@ namespace ServiceManagerApp;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class EquipmentWindow : Window
+public partial class EquipmentView : UserControl
 {
     private readonly EquipmentRepository equipmentRepository;
     private readonly CustomerRepository customerRepository;
     private ObservableCollection<Equipment> equipments = new ObservableCollection<Equipment>();
-    public EquipmentWindow(EquipmentRepository equipmentRepository, CustomerRepository customerRepository)
+    public EquipmentView(EquipmentRepository equipmentRepository, CustomerRepository customerRepository)
     {
         InitializeComponent();
         this.equipmentRepository = equipmentRepository;

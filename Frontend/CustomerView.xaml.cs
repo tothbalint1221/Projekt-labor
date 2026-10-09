@@ -9,11 +9,11 @@ namespace ServiceManagerApp;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class CustomerWindow : Window
+public partial class CustomerView : UserControl
 {
     private readonly CustomerRepository customerRepository;
     private ObservableCollection<Customer> customers = new ObservableCollection<Customer>();
-    public CustomerWindow(CustomerRepository customerRepository)
+    public CustomerView(CustomerRepository customerRepository)
     {
         InitializeComponent();
         this.customerRepository = customerRepository;

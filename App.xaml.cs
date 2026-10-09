@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Frontend;
 
 namespace ServiceManagerApp;
 
@@ -27,9 +28,10 @@ public partial class App : Application
 				services.AddTransient<ServiceTicketRepository>();
 				services.AddTransient<TicketPartRepository>();
 				services.AddTransient<UserRepository>();
+				services.AddTransient<PrimaryWindow>();
 				services.AddTransient<MainWindow>();
-				services.AddTransient<CustomerWindow>();
-				services.AddTransient<EquipmentWindow>();
+				services.AddTransient<CustomerView>();
+				services.AddTransient<EquipmentView>();
 				services.AddTransient<DataSeeder>();
 				services.AddTransient<MenuWindow>();
 			})
@@ -37,11 +39,10 @@ public partial class App : Application
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
+		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
 
 		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 		await seeder.SeedAsync();
-
-		scope.ServiceProvider.GetRequiredService<MainWindow>().Show();
 	}
 
 	protected override async void OnExit(ExitEventArgs e)
