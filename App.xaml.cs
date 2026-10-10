@@ -33,6 +33,7 @@ public partial class App : Application
 				services.AddTransient<EquipmentView>();
 				services.AddTransient<DataSeeder>();
 				services.AddTransient<MenuWindow>();
+				services.AddTransient<ServiceTicketView>();
 			})
 			.Build();
 
