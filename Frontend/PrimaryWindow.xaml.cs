@@ -40,6 +40,10 @@ public partial class PrimaryWindow : Window
                 MainContentArea.Content = _serviceProvider.GetRequiredService<ServiceTicketView>();
                 break;
 
+            case "Users":
+                MainContentArea.Content = _serviceProvider.GetRequiredService<UserView>();
+                break;
+
             default:
                 break;
         }

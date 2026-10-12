@@ -34,7 +34,8 @@ public partial class App : Application
 				services.AddTransient<DataSeeder>();
 				services.AddTransient<MenuWindow>();
 				services.AddTransient<ServiceTicketView>();
-			})
+				services.AddTransient<UserView>();
+            })
 			.Build();
 
 		await host.StartAsync();
