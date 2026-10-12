@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace ServiceManagerApp.Repositories
 {
@@ -22,5 +23,22 @@ namespace ServiceManagerApp.Repositories
         {
             return BCrypt.Net.BCrypt.EnhancedHashPassword(password, 13);
         }
+        public async Task<User?> LoginAsync(string email, string password)
+        {
+            var user = await DbSet.SingleOrDefaultAsync(
+                u => u.Email == email.Trim());
+
+            if (user == null)
+                return null;
+
+            bool validPassword = BCrypt.Net.BCrypt.EnhancedVerify(password,
+                user.Password);
+
+            if(!validPassword)
+                return null;
+
+            return user;
+        }
     }
+
 }
