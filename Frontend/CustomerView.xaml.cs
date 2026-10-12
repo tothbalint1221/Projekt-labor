@@ -7,7 +7,7 @@ using ServiceManagerApp.Repositories;
 namespace ServiceManagerApp;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaction logic for CustomerView.xaml
 /// </summary>
 public partial class CustomerView : UserControl
 {

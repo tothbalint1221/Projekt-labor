@@ -23,21 +23,21 @@ namespace ServiceManagerApp.Repositories
         {
             return BCrypt.Net.BCrypt.EnhancedHashPassword(password, 13);
         }
-        public async Task<User?> LoginAsync(string email, string password)
+        public async Task<(User? User, string? Reason)> LoginAsync(string email, string password)
         {
             var user = await DbSet.SingleOrDefaultAsync(
                 u => u.Email == email.Trim());
 
             if (user == null)
-                return null;
+                return (null,"No user was found with this email!");
 
             bool validPassword = BCrypt.Net.BCrypt.EnhancedVerify(password,
                 user.Password);
 
-            if(!validPassword)
-                return null;
+            if (!validPassword)
+                return (null, "Incorrect password.");
 
-            return user;
+            return (user,null);
         }
     }
 

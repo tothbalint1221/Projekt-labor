@@ -8,7 +8,7 @@ using ServiceManagerApp.Repositories;
 namespace ServiceManagerApp;
 
 /// <summary>
-/// Interaction logic for MainWindow.xaml
+/// Interaction logic for EquipmentView.xaml
 /// </summary>
 public partial class EquipmentView : UserControl
 {
