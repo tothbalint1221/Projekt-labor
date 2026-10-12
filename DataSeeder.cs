@@ -70,7 +70,8 @@ public class DataSeeder
                 Password = "tech123",
                 Phonenumber = "06301234567",
                 Email = "techguy1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 1"
+                Address = "8200 Veszprem, Budapest ut 1",
+                Role = Role.Technician
             },
             new User
             {
@@ -78,7 +79,8 @@ public class DataSeeder
                 Password = "clerk123",
                 Phonenumber = "06207654321",
                 Email = "clerkguy1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 3"
+                Address = "8200 Veszprem, Budapest ut 3",
+                Role = Role.Clerk
             },
             new User
             {
@@ -86,9 +88,10 @@ public class DataSeeder
                 Password = "admin123",
                 Phonenumber = "0610101010",
                 Email = "admin1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 5"
+                Address = "8200 Veszprem, Budapest ut 5",
+                Role = Role.Admin
             }
-            // szomszed mind es ez igy jo
+
         };
 
         foreach (var user in users)
