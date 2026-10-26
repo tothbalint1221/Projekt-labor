@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
@@ -103,6 +104,25 @@ public partial class CustomerView : UserControl
 
                 await LoadCustomersAsync();
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+    {
+        try
+        {
+            if (e.EditAction != DataGridEditAction.Commit || e.Row.Item is not Customer customer)
+            {
+                return;
+            }
+
+            await Dispatcher.InvokeAsync( () => {}, DispatcherPriority.Background ) ;
+
+            await customerRepository.UpdateAsync(customer);         
         }
         catch (Exception ex)
         {

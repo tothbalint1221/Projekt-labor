@@ -35,12 +35,13 @@ public partial class App : Application
 				services.AddTransient<MenuWindow>();
 				services.AddTransient<ServiceTicketView>();
 				services.AddTransient<UserView>();
+				services.AddTransient<PartsView>();
             })
 			.Build();
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
-		scope.ServiceProvider.GetRequiredService<SignInWindow>().Show();
+		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
 
 		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 		await seeder.SeedAsync();

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.IdentityModel.Tokens;
+using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
@@ -16,15 +17,18 @@ public partial class ServiceTicketView : UserControl
     private readonly UserRepository userRepository;
     private readonly ServiceTicketRepository serviceTicketRepository;
     private readonly FaultRepository faultRepository;
+    private readonly PartRepository partRepository;
+    private readonly TicketPartRepository ticketPartRepository;
     private ObservableCollection<ServiceTicket> serviceTickets = new ObservableCollection<ServiceTicket>();
-    private ObservableCollection<Fault> faults = new ObservableCollection<Fault>();
-    public ServiceTicketView(EquipmentRepository equipmentRepository, UserRepository userRepository, ServiceTicketRepository serviceTicketRepository, FaultRepository faultRepository)
+    public ServiceTicketView(EquipmentRepository equipmentRepository, UserRepository userRepository, ServiceTicketRepository serviceTicketRepository, FaultRepository faultRepository, PartRepository partRepository, TicketPartRepository ticketPartRepository)
     {
         InitializeComponent();
         this.equipmentRepository = equipmentRepository;
         this.userRepository = userRepository;
         this.serviceTicketRepository = serviceTicketRepository;
         this.faultRepository = faultRepository;
+        this.partRepository = partRepository;
+        this.ticketPartRepository = ticketPartRepository;
 
         Loaded += async (s, e) => await LoadServiceTicketsAsync();
     }
@@ -46,8 +50,6 @@ public partial class ServiceTicketView : UserControl
                     serviceTickets.Add(ticket);
                 }
             }
-
-            cmbServiceTickets.ItemsSource = serviceTickets;
 
             dataGridServiceTickets.ItemsSource = serviceTickets;
         }
@@ -109,32 +111,17 @@ public partial class ServiceTicketView : UserControl
         }
     }
 
-    private async void BtnAddFaultAsync(object sender, RoutedEventArgs e)
+    private void BtnServiceTicketDetails(object sender, RoutedEventArgs e)
     {
-        try
+        if (sender is Button button && button.DataContext is ServiceTicket selectedServiceTicket)
         {
-            if (cmbServiceTickets.SelectedValue is not int serviceTicketId)
+            var detailsWindow = new ServiceTicketDetails(selectedServiceTicket, serviceTicketRepository, faultRepository, partRepository, ticketPartRepository)
             {
-                MessageBox.Show("Please select a service ticket.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            await faultRepository.CreateAsync(new Fault
-            {
-                ServiceTicketId = serviceTicketId,
-                FaultName = txtFaultName.Text ?? string.Empty,
-                Diagnosis = txtDiagnosis.Text ?? string.Empty,
-                Repairs = txtRepairs.Text ?? string.Empty
-            });
-
-            txtFaultName.Clear();
-            txtDiagnosis.Clear();
-            txtRepairs.Clear();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw;
+                Owner = Window.GetWindow(this)
+            };
+            detailsWindow.ShowDialog();
+            dataGridServiceTickets.Items.Refresh();
         }
     }
+
 }
