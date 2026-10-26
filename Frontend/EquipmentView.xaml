@@ -38,14 +38,22 @@
             <Button x:Name="btnAddEquipment" Content="Add Equipment" Width="100" Margin="4" Click="BtnAddEquipmentAsync"/>
         </StackPanel>
 
-        <DataGrid x:Name="dataGridEquipments" Grid.Row="2" Grid.Column="1" Margin="5" AutoGenerateColumns="False">
+        <DataGrid x:Name="dataGridEquipments" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="*"/>
-                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
-                <DataGridTextColumn Header="Brand" Binding="{Binding Brand}" Width="*"/>
-                <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="*"/>
-                <DataGridTextColumn Header="Serial Number" Binding="{Binding SerialNumber}" Width="*"/>
-                <DataGridTextColumn Header="Owner" Binding="{Binding CustomerId}" Width="*"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Brand" Binding="{Binding Brand}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Model" Binding="{Binding Model}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Serial Number" Binding="{Binding SerialNumber}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Owner" Binding="{Binding CustomerId}" IsReadOnly="True" Width="*"/>
+
+                <DataGridTemplateColumn Header="" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Details" Click="BtnEquipmentDetails" Margin="2"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Header="" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>

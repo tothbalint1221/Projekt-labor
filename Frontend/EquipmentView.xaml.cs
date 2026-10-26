@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.IdentityModel.Tokens;
+using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
 
 namespace ServiceManagerApp;
@@ -14,12 +15,14 @@ public partial class EquipmentView : UserControl
 {
     private readonly EquipmentRepository equipmentRepository;
     private readonly CustomerRepository customerRepository;
+    private readonly FaultRepository faultRepository;
     private ObservableCollection<Equipment> equipments = new ObservableCollection<Equipment>();
-    public EquipmentView(EquipmentRepository equipmentRepository, CustomerRepository customerRepository)
+    public EquipmentView(EquipmentRepository equipmentRepository, CustomerRepository customerRepository, FaultRepository faultRepository)
     {
         InitializeComponent();
         this.equipmentRepository = equipmentRepository;
         this.customerRepository = customerRepository;
+        this.faultRepository = faultRepository;
 
         Loaded += async (s, e) => await LoadEquipmentsAsync();
     }
@@ -111,6 +114,18 @@ public partial class EquipmentView : UserControl
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void BtnEquipmentDetails(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.DataContext is Equipment selectedEquipment)
+        {
+            var detailsWindow = new EquipmentDetails(selectedEquipment, faultRepository)
+            {
+                Owner = Window.GetWindow(this)
+            };
+            detailsWindow.ShowDialog();
         }
     }
 }

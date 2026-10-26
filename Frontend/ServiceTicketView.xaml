@@ -10,7 +10,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -46,37 +45,31 @@
             <Button x:Name="btnAddServiceTicket" Content="Add Ticket" Width="100" Margin="4" Click="BtnAddServiceTicketAsync"/>
         </StackPanel>
 
-
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <ComboBox x:Name="cmbServiceTickets" SelectedValuePath="Id" Width="250" Margin="5">
-            <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Id, StringFormat='[#{0}] '}"/>
-                            <TextBlock Text="{Binding User.Name, StringFormat='{}{0} - '}"/>
-                            <TextBlock Text="{Binding Equipment.SerialNumber}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <TextBox x:Name="txtFaultName" Width="100" Margin="4"/>
-            <TextBox x:Name="txtDiagnosis" Width="100" Margin="4"/>
-            <TextBox x:Name="txtRepairs" Width="100" Margin="4"/>
-            <Button x:Name="btnAddFault" Content="Add Fault" Width="100" Margin="4" Click="BtnAddFaultAsync"/>
-        </StackPanel>
-
-        <DataGrid x:Name="dataGridServiceTickets" Grid.Row="3" Grid.Column="1" Margin="5" AutoGenerateColumns="False">
+        <DataGrid x:Name="dataGridServiceTickets" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="*"/>
-                <DataGridTextColumn Header="User" Binding="{Binding User.Name}" Width="*"/>
-                <DataGridTextColumn Header="Equipment" Binding="{Binding Equipment.SerialNumber}" Width="*"/>
-                <DataGridTextColumn Header="IntakeDate" Binding="{Binding IntakeDate}" Width="*"/>
-                <DataGridTextColumn Header="CompletionDate" Binding="{Binding CompletionDate}" Width="*"/>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="User" Binding="{Binding User.Name}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Equipment" Binding="{Binding Equipment.SerialNumber}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="IntakeDate" Binding="{Binding IntakeDate}" IsReadOnly="True" Width="*"/>
+                <DataGridTextColumn Header="CompletionDate" Binding="{Binding CompletionDate}" IsReadOnly="True" Width="*"/>
 
                 <DataGridTemplateColumn Header="" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="X" Click="BtnDeleteServiceTicketAsync"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Details" Click="BtnServiceTicketDetails" Margin="2"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Header="" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="X" Click="BtnDeleteServiceTicketAsync" Margin="2"/>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

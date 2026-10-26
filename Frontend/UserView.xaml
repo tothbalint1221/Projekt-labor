@@ -28,7 +28,7 @@
             <ComboBox x:Name="cmbUserRole" Width="120" Margin="4"/>
             <Button x:Name="btnAddUser" Content="Add User" Width="100" Margin="4" Click="BtnAddUserAsync"/>
         </StackPanel>
-        <DataGrid x:Name="dataGridUsers" Grid.Row="2" Grid.Column="1" Margin="5" AutoGenerateColumns="False">
+        <DataGrid x:Name="dataGridUsers" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="*"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
