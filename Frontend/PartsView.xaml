@@ -31,7 +31,7 @@
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" IsReadOnly="True" Width="*"/>
                 <DataGridTextColumn Header="Part Name" Binding="{Binding PartName}" Width="*"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Cost" Binding="{Binding PartCost, StringFormat={}{0:C2}}" Width="*"/>
+                <DataGridTextColumn Header="Cost" Binding="{Binding PartCost, StringFormat={}{0:C2},ConverterCulture=hu-HU}" Width="*"/>
 
                 <DataGridTemplateColumn Header="" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
