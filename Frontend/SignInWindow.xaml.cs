@@ -3,6 +3,7 @@ using System.Windows;
 using ServiceManagerApp.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceManagerApp.Frontend;
+using ServiceManagerApp.Services.Users;
 
 namespace ServiceManagerApp;
 
@@ -13,12 +14,14 @@ public partial class SignInWindow : Window
 {
     private readonly UserRepository _userRepository;
     private readonly IServiceProvider _services;
+    private readonly UserSession _session;
 
-    public SignInWindow(UserRepository userRepository, IServiceProvider service)
+    public SignInWindow(UserRepository userRepository, IServiceProvider service, UserSession session)
     {
         InitializeComponent();
         this._userRepository = userRepository;
         this._services = service;
+        this._session = session;
     }
 
     private async void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -49,6 +52,7 @@ public partial class SignInWindow : Window
                 return;
             }
 
+            _session.SignIn(result.User);
             var primaryWindow = _services.GetRequiredService<PrimaryWindow>();
             Application.Current.MainWindow = primaryWindow;
             primaryWindow.Show();
@@ -57,6 +61,8 @@ public partial class SignInWindow : Window
         }
         catch (Exception ex)
         {
+            _session.SignOut();
+
             MessageBox.Show($"Login failed:({ex.Message}), Try again later!");
         }
         finally { LoginButton.IsEnabled = true; }

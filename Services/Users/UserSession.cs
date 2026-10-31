@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ServiceManagerApp.Services.Users
 {
-    internal class UserSession
+    public class UserSession
     {
         public SignedInUser? CurrentUser { get; private set; }
         public bool IsSignedIn => CurrentUser is not null;
@@ -20,7 +20,7 @@ namespace ServiceManagerApp.Services.Users
 
         }
 
-        public void SignOut()
+        public void SignOut() //Törli a memoriabol a bejeletkezett fh-t
         {
             CurrentUser = null;
         }
