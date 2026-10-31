@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ServiceManagerApp.Frontend
 {
@@ -20,17 +21,20 @@ namespace ServiceManagerApp.Frontend
     {
         private readonly UserSession _session;
         private readonly UserRepository _userRepository;
+        private readonly IServiceProvider _services;
 
-        public ProfileView(UserSession session, UserRepository userRepository)
+        public ProfileView(UserSession session, UserRepository userRepository, IServiceProvider services)
         {
             InitializeComponent();
             _session = session;
             _userRepository = userRepository;
+            _services = services;
 
             btnSavePassword.IsEnabled = false;
             btnSignOut.IsEnabled = false;
 
             Loaded += ProfileView_Loaded;
+            btnSignOut.Click += SignOut_Click;
 
         }
 
@@ -53,6 +57,7 @@ namespace ServiceManagerApp.Frontend
             {
                 return;
             }
+            btnSignOut.IsEnabled = true;
             try
             {
                 var user = await _userRepository.GetAsync(currentUser.Id);
@@ -86,6 +91,47 @@ namespace ServiceManagerApp.Frontend
                     MessageBoxImage.Error);
 
             }
+        }
+        private void SignOut_Click(object sender,RoutedEventArgs e)
+        {
+            if(_session.CurrentUser is null)
+            {
+                return;
+            }
+            var mainWindow = Window.GetWindow(this);
+
+            if (mainWindow is null)
+            {
+                return;
+            }
+            try 
+            { 
+                var signInWindow = _services.GetRequiredService<SignInWindow>();
+
+                signInWindow.Show();
+                Application.Current.MainWindow = signInWindow;
+
+                _session.SignOut();
+
+                txtCurrentPassword.Clear();
+                txtNewPassword.Clear();
+                txtConfirmPassword.Clear();
+
+                mainWindow.Close();
+
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(
+                    $"Could not sign out:\n\n{ex.Message}",
+                    "Sign out error!",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+            }
+
+
 
         }
     }

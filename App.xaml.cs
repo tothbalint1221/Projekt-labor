@@ -44,7 +44,7 @@ public partial class App : Application
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
-		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
+		scope.ServiceProvider.GetRequiredService<SignInWindow>().Show();
 
 		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 		await seeder.SeedAsync();
