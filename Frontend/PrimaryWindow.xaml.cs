@@ -47,6 +47,9 @@ public partial class PrimaryWindow : Window
             case "Parts":
                 MainContentArea.Content = _serviceProvider.GetRequiredService<PartsView>();
                 break;
+            case "Profile":
+                MainContentArea.Content = _serviceProvider.GetRequiredService<ProfileView>();
+                break;
 
             default:
                 break;

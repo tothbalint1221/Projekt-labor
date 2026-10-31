@@ -36,6 +36,7 @@ public partial class App : Application
 				services.AddTransient<ServiceTicketView>();
 				services.AddTransient<UserView>();
 				services.AddTransient<PartsView>();
+				services.AddTransient<ProfileView>();
             })
 			.Build();
 

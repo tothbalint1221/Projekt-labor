@@ -19,6 +19,7 @@
                 <Button Content="Equipments" Margin="0,4" Padding="8,6" Click="BtnNav_Click" Tag="Equipments"/>
                 <Button Content="Parts" Margin="0,4" Padding="8,6" Click="BtnNav_Click" Tag="Parts"/>
                 <Button Content="Users" Margin="0,4" Padding="8,6" Click="BtnNav_Click" Tag="Users"/>
+                <Button Content="Profile" Margin="0,4" Padding="8,6" Click="BtnNav_Click" Tag="Profile"/>
             </StackPanel>
         </Border>
 
