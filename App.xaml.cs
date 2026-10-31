@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Services.Users;
 
 namespace ServiceManagerApp;
 
@@ -37,6 +38,7 @@ public partial class App : Application
 				services.AddTransient<UserView>();
 				services.AddTransient<PartsView>();
 				services.AddTransient<ProfileView>();
+				services.AddSingleton<UserSession>();
             })
 			.Build();
 
