@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.NetworkInformation;
 
 namespace ServiceManagerApp.Frontend
 {
@@ -34,12 +35,15 @@ namespace ServiceManagerApp.Frontend
             btnSignOut.IsEnabled = false;
 
             Loaded += ProfileView_Loaded;
+            btnSavePassword.Click += SavePassword_Click;
             btnSignOut.Click += SignOut_Click;
 
         }
 
         private async void ProfileView_Loaded(object sender, RoutedEventArgs e)
         {
+            btnSavePassword.IsEnabled = false;
+
             txtProfileName.Text = "Not Signed in";
             txtProfileRole.Text = string.Empty;
             txtProfileEmail.Text = string.Empty;
@@ -78,6 +82,7 @@ namespace ServiceManagerApp.Frontend
                 txtNewPassword.IsEnabled = true;
                 txtConfirmPassword.IsEnabled = true;
 
+                btnSavePassword.IsEnabled = true;
 
             }
             catch (Exception ex)
@@ -165,6 +170,73 @@ namespace ServiceManagerApp.Frontend
             return true;
         }
 
+        private async void SavePassword_Click(object sender, RoutedEventArgs e)
+        {
+            var currentUser = _session.CurrentUser;
 
+            if (currentUser is null)
+                return;
+
+            if (!ValidatePasswordFields()) { return; }
+
+            string currentPassword = txtCurrentPassword.Password;
+            string newPassword = txtNewPassword.Password;
+
+            btnSavePassword.IsEnabled = false;
+            btnSignOut.IsEnabled = false;
+
+            try
+            {
+                var result = await _userRepository.ChangePasswordAsync(
+                    currentUser.Id,
+                    currentPassword,
+                    newPassword);
+
+                if(!result.Success)
+                {
+                    MessageBox.Show(
+                        result.Error,
+                        "Password change",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+
+                    return;
+                }
+
+                txtCurrentPassword.Clear();
+                txtNewPassword.Clear();
+                txtConfirmPassword.Clear();
+
+                MessageBox.Show(
+                    "Your password has been changed.",
+                    "Password change",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information
+                    );
+
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Could not change password: \n\n{ex.Message}",
+                    "Password change error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                    );
+            }
+            finally 
+            {
+                bool isSameUser =
+                    _session.CurrentUser?.Id == currentUser.Id;
+
+                btnSavePassword.IsEnabled = isSameUser;
+                btnSignOut.IsEnabled = isSameUser;
+
+            }
+
+
+
+        }
     }
 }
