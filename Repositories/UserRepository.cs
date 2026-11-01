@@ -39,6 +39,54 @@ namespace ServiceManagerApp.Repositories
 
             return (user,null);
         }
-    }
+        
+        public async Task<(bool Success,string? Error)> ChangePasswordAsync(int userId,string currentPassword, string newPassword)
+        {
+            if(string.IsNullOrWhiteSpace(currentPassword) ||
+                string.IsNullOrWhiteSpace(newPassword))
+            {
+                return (false, "Please fill in all password fields");
+            }
 
+            var user = await DbSet
+                .AsNoTracking()
+                .SingleOrDefaultAsync(user => user.Id == userId);
+            
+            if(user is null)
+            {
+                return (false, "User not found");
+            }
+
+            bool validPassword = BCrypt.Net.BCrypt.EnhancedVerify(
+                currentPassword,
+                user.Password);
+
+            if(!validPassword)
+            {
+                return (false, "Your current password is incorrect.");
+            }
+
+            if(currentPassword==newPassword)
+            {
+                return (false, "Please choose a different new password");
+            }
+
+            string newHash = Hash(newPassword);
+
+            int updatedRows = await DbSet
+                .Where(u => u.Id == userId && u.Password == user.Password)
+                .ExecuteUpdateAsync(update => update
+                        .SetProperty(u => u.Password, newHash));
+
+            if(updatedRows != 1)
+            {
+                return (false,
+                    "The user data changed. Please try again.");
+            }
+
+            return (true, null);
+
+        }
+
+    }
 }
