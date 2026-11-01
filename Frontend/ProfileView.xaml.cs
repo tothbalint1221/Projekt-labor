@@ -131,8 +131,40 @@ namespace ServiceManagerApp.Frontend
 
             }
 
-
-
         }
+        
+        private bool ValidatePasswordFields()
+        {
+            if(string.IsNullOrWhiteSpace(txtCurrentPassword.Password))
+            {
+                MessageBox.Show("Please enter your current password");
+                return false;
+            }
+            if(string.IsNullOrWhiteSpace(txtNewPassword.Password)||
+                string.IsNullOrWhiteSpace(txtConfirmPassword.Password))
+            {
+                MessageBox.Show("Please fill in all password fields",
+                    "Missing password",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return false;
+            }
+
+            if(txtNewPassword.Password != txtConfirmPassword.Password)
+            {
+                MessageBox.Show(
+                    "The new passwords do not match",
+                    "Password mismatch",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+
+                return false;
+            }
+
+
+            return true;
+        }
+
+
     }
 }
