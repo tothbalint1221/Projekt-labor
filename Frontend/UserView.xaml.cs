@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Services.Users;
 
 namespace ServiceManagerApp;
 
@@ -12,11 +14,13 @@ namespace ServiceManagerApp;
 public partial class UserView : UserControl
 {
     private readonly UserRepository userRepository;
+    private readonly UserSession userSession;
     private ObservableCollection<User> users = new ObservableCollection<User>();
-    public UserView(UserRepository userRepository)
+    public UserView(UserRepository userRepository, UserSession userSession)
     {
         InitializeComponent();
         this.userRepository = userRepository;
+        this.userSession = userSession;
 
         cmbUserRole.ItemsSource = Enum.GetValues<Role>();
         cmbUserRole.SelectedItem = Role.Technician;
@@ -99,6 +103,21 @@ public partial class UserView : UserControl
                 "User Add Error",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
+        }
+    }
+
+    private void BtnUserEdit(object sender, RoutedEventArgs e)
+    {
+        if(userSession.CurrentUser?.Role != Role.Admin)
+        {
+            MessageBox.Show("You do not have permission to edit users.", "Permission Denied", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        if (sender is Button button && button.DataContext is User selectedUser)
+        {
+            var userDetailsWindow = new UserEdit(selectedUser, userRepository, userSession);
+            userDetailsWindow.ShowDialog();
+            _ = LoadUsersAsync();
         }
     }
 

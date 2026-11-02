@@ -1,0 +1,129 @@
+﻿<Window x:Class="ServiceManagerApp.Frontend.UserEdit"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="User Details" Height="520" Width="850"
+        MinHeight="480" MinWidth="650"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="3" Text="User Details"
+                   FontSize="20" FontWeight="SemiBold" Margin="0,0,0,20"/>
+
+        <Border Grid.Row="1" Grid.Column="0"
+                BorderBrush="#AAAAAA"
+                BorderThickness="1"
+                Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Details"
+                           FontSize="16" FontWeight="SemiBold" Margin="0,0,0,18"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Id:" FontWeight="SemiBold" Margin="0,0,12,12"/>
+                <TextBlock x:Name="txtUserId" Grid.Row="1" Grid.Column="1" Margin="0,0,0,12"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Name:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                <TextBox x:Name="txtUserName" Grid.Row="2" Grid.Column="1" Padding="6" Margin="0,0,0,12"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Phone:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                <TextBox x:Name="txtUserPhone" Grid.Row="3" Grid.Column="1" Padding="6" Margin="0,0,0,12"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Email:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                <TextBox x:Name="txtUserEmail" Grid.Row="4" Grid.Column="1" Padding="6" Margin="0,0,0,12"/>
+
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Address:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                <TextBox x:Name="txtUserAddress" Grid.Row="5" Grid.Column="1" Padding="6" Margin="0,0,0,12"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Role:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                <ComboBox x:Name="cmbUserRole" Grid.Row="6" Grid.Column="1" Padding="6" Margin="0,0,0,12"/>
+
+                <Button x:Name="btnSaveUser"
+                        Grid.Row="8" Grid.ColumnSpan="2"
+                        Content="Save details"
+                        Background="#008000"
+                        Foreground="White"
+                        Padding="8"
+                        Margin="0,8,0,0"
+                        Click="BtnSaveUserAsync"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="2"
+                BorderBrush="#AAAAAA"
+                BorderThickness="1"
+                Padding="16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Change password"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,18"/>
+
+                    <Label Content="Current password"
+                           Target="{Binding ElementName=txtCurrentPassword}"
+                           Padding="0"
+                           Margin="0,0,0,6"
+                           x:Name="lblCurrentPassword"/>
+
+                    <PasswordBox x:Name="txtCurrentPassword"
+                                 Padding="6"
+                                 Margin="0,0,0,14"/>
+
+                    <Label Content="New password"
+                           Target="{Binding ElementName=txtNewPassword}"
+                           Padding="0"
+                           Margin="0,0,0,6"/>
+
+                    <PasswordBox x:Name="txtNewPassword"
+                                 Padding="6"
+                                 Margin="0,0,0,14"/>
+
+                    <Label Content="Confirm new password"
+                           Target="{Binding ElementName=txtConfirmPassword}"
+                           Padding="0"
+                           Margin="0,0,0,6"/>
+
+                    <PasswordBox x:Name="txtConfirmPassword"
+                                 Padding="6"/>
+                </StackPanel>
+
+                <Button x:Name="btnSavePassword"
+                        Grid.Row="1"
+                        Content="Save password"
+                        Background="#008000"
+                        Foreground="White"
+                        Padding="8"
+                        Margin="0,8,0,0"
+                        Click="BtnSavePasswordAsync"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

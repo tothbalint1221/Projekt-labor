@@ -20,11 +20,11 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtUserName" Width="100" Margin="4"/>
-            <TextBox x:Name="txtUserPassword" Width="100" Margin="4"/>
-            <TextBox x:Name="txtUserPhone" Width="100" Margin="4"/>
-            <TextBox x:Name="txtUserEmail" Width="100" Margin="4"/>
-            <TextBox x:Name="txtUserAddress" Width="100" Margin="4"/>
+            <TextBox x:Name="txtUserName" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name"/>
+            <TextBox x:Name="txtUserPassword" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Password"/>
+            <TextBox x:Name="txtUserPhone" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone"/>
+            <TextBox x:Name="txtUserEmail" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email"/>
+            <TextBox x:Name="txtUserAddress" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address"/>
             <ComboBox x:Name="cmbUserRole" Width="120" Margin="4"/>
             <Button x:Name="btnAddUser" Content="Add User" Width="100" Margin="4" Click="BtnAddUserAsync"/>
         </StackPanel>
@@ -36,8 +36,16 @@
                 <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
                 <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
                 <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="*"/>
-
+                
                 <DataGridTemplateColumn Header="" Width="Auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Edit" Click="BtnUserEdit"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="" Width="Auto">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="X" Click="BtnDeleteUserAsync"/>
