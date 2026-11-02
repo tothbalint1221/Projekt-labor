@@ -20,10 +20,10 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtCustomerName" Width="100" Margin="4"/>
-            <TextBox x:Name="txtCustomerPhone" Width="100" Margin="4"/>
-            <TextBox x:Name="txtCustomerEmail" Width="100" Margin="4"/>
-            <TextBox x:Name="txtCustomerAddress" Width="100" Margin="4"/>
+            <TextBox x:Name="txtCustomerName" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name" />
+            <TextBox x:Name="txtCustomerPhone" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone" />
+            <TextBox x:Name="txtCustomerEmail" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email" />
+            <TextBox x:Name="txtCustomerAddress" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address" />
             <Button x:Name="btnAddCustomer" Content="Add Customer" Width="100" Margin="4" Click="BtnAddCustomerAsync"/>
         </StackPanel>
 

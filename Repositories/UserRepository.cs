@@ -15,8 +15,9 @@ namespace ServiceManagerApp.Repositories
 
         public override async Task UpdateAsync(User user, bool save = true)
         {
-            user.Password = Hash(user.Password);
-            await base.UpdateAsync(user, save);
+            var entry = DbSet.Update(user);
+            entry.Property(u => u.Password).IsModified = false;
+            if (save) await SaveChangesAsync();
         }
 
         public string Hash(string password)
@@ -86,6 +87,30 @@ namespace ServiceManagerApp.Repositories
 
             return (true, null);
 
+        }
+
+        public async Task<User?> ForceChangePasswordAsync(int userId, string newPassword)
+        {
+            if (string.IsNullOrWhiteSpace(newPassword))
+            {
+                throw new ArgumentException("New password cannot be empty", nameof(newPassword));
+            }
+            var user = await DbSet.SingleOrDefaultAsync(user => user.Id == userId);
+            if (user is null)
+            {
+                throw new InvalidOperationException("User not found");
+            }
+            string newHash = Hash(newPassword);
+            int updatedRows = await DbSet
+                .Where(u => u.Id == userId && u.Password == user.Password)
+                .ExecuteUpdateAsync(update => update.SetProperty(u => u.Password, newHash));
+
+            if (updatedRows != 1)
+            {
+                throw new InvalidOperationException("Failed to update user password");
+            }
+
+            return await DbSet.SingleOrDefaultAsync(user => user.Id == userId);
         }
 
     }

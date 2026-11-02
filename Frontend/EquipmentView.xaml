@@ -21,10 +21,10 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtCategory" Width="100" Margin="4"/>
-            <TextBox x:Name="txtBrand" Width="100" Margin="4"/>
-            <TextBox x:Name="txtModel" Width="100" Margin="4"/>
-            <TextBox x:Name="txtSerialNumber" Width="100" Margin="4"/>
+            <TextBox x:Name="txtCategory" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Category"/>
+            <TextBox x:Name="txtBrand" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Brand"/>
+            <TextBox x:Name="txtModel" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Model"/>
+            <TextBox x:Name="txtSerialNumber" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Serial Number"/>
             <ComboBox x:Name="cmbCustomers" SelectedValuePath="Id" Width="250" Margin="5">
             <ComboBox.ItemTemplate>
                     <DataTemplate>
