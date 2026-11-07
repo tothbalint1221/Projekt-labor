@@ -114,9 +114,6 @@ namespace ServiceManagerApp.Migrations
                     b.Property<int>("ServiceTicketId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceTicketId");
@@ -155,6 +152,10 @@ namespace ServiceManagerApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.PrimitiveCollection<string>("ChangeLog")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CompletionDate")
                         .HasColumnType("datetime2");

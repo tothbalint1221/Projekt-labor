@@ -286,7 +286,6 @@ public class DataSeeder
                 FaultName = "Villogo kijelzo",
                 Diagnosis = "LCD panelen meghibasodott",
                 Repairs = "LCD panel kicserelve",
-                Status = Status.Finished
             });
         }
 
@@ -298,7 +297,6 @@ public class DataSeeder
                 FaultName = "Gep nem kapcsol be",
                 Diagnosis = "Hibas tapegyseg",
                 Repairs = "Tapegyseg kicserelve",
-                Status = Status.Finished
             });
         }
 
@@ -310,7 +308,6 @@ public class DataSeeder
                 FaultName = "Beragadt papir",
                 Diagnosis = "Papir beragadt az adagolo rendszerben",
                 Repairs = "Papir eltavolitva, adagolo rendszert kitisztitva",
-                Status = Status.Accepted
             });
         }
 
@@ -327,6 +324,21 @@ public class DataSeeder
         var existingTickets = await _serviceTicketRepository.GetAllAsync();
         if (existingTickets.Count > 0)
         {
+            var ticketsWithoutChangeLog = existingTickets
+                .Where(ticket => ticket.ChangeLog.Count == 0)
+                .ToList();
+
+            foreach (var ticket in ticketsWithoutChangeLog)
+            {
+                ticket.ChangeLog.Add($"{ticket.IntakeDate} - Ticket Created");
+            }
+
+            if (ticketsWithoutChangeLog.Count > 0)
+            {
+                await _serviceTicketRepository.SaveChangesAsync();
+                Debug.WriteLine($"Added initial change-log entries to {ticketsWithoutChangeLog.Count} service tickets");
+            }
+
             Debug.WriteLine("Service tickets already exist, skipping seeding...");
             return;
         }
@@ -337,6 +349,11 @@ public class DataSeeder
         if (equipment.Count == 0 || users.Count == 0)
             return;
 
+        var firstIntakeDate = DateTime.Now.AddDays(-5);
+        var firstCompletionDate = DateTime.Now.AddDays(-2);
+        var secondIntakeDate = DateTime.Now.AddDays(-3);
+        var secondCompletionDate = DateTime.Now;
+        var thirdIntakeDate = DateTime.Now.AddDays(-1);
         var tickets = new List<ServiceTicket>();
 
         if (equipment.Count > 0 && users.Count > 0)
@@ -345,11 +362,16 @@ public class DataSeeder
             {
                 UserId = users[0].Id,
                 EquipmentId = equipment[0].Id,
-                IntakeDate = DateTime.Now.AddDays(-5),
-                CompletionDate = DateTime.Now.AddDays(-2),
+                IntakeDate = firstIntakeDate,
+                CompletionDate = firstCompletionDate,
                 Status = Status.Finished,
                 LaborCost = 5000.00m,
-                Price = 20000.00m // THESE ARE EXAMPLES VALUES, WILL BE AUTO CALCULATED
+                Price = 20000.00m, // THESE ARE EXAMPLES VALUES, WILL BE AUTO CALCULATED
+                ChangeLog =
+                [
+                    $"{firstIntakeDate} - Ticket Created",
+                    $"{firstCompletionDate} - Status changed to: {Status.Finished}"
+                ]
             });
         }
 
@@ -359,11 +381,16 @@ public class DataSeeder
             {
                 UserId = users[1].Id,
                 EquipmentId = equipment[1].Id,
-                IntakeDate = DateTime.Now.AddDays(-3),
-                CompletionDate = DateTime.Now,
+                IntakeDate = secondIntakeDate,
+                CompletionDate = secondCompletionDate,
                 Status = Status.Finished,
                 LaborCost = 5000.00m,
-                Price = 20000.00m
+                Price = 20000.00m,
+                ChangeLog =
+                [
+                    $"{secondIntakeDate} - Ticket Created",
+                    $"{secondCompletionDate} - Status changed to: {Status.Finished}"
+                ]
             });
         }
 
@@ -373,11 +400,12 @@ public class DataSeeder
             {
                 UserId = users[2].Id,
                 EquipmentId = equipment[2].Id,
-                IntakeDate = DateTime.Now.AddDays(-1),
+                IntakeDate = thirdIntakeDate,
                 CompletionDate = null,
                 Status = Status.Accepted,
                 LaborCost = 5000.00m,
-                Price = 20000.00m
+                Price = 20000.00m,
+                ChangeLog = [$"{thirdIntakeDate} - Ticket Created"]
             });
         }
 

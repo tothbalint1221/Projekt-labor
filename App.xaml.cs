@@ -19,35 +19,36 @@ public partial class App : Application
 		host = Host.CreateDefaultBuilder()
 			.ConfigureServices(services =>
 			{
-				services.AddDbContext<AppDbContext>(ServiceLifetime.Transient);
+				services.AddDbContext<AppDbContext>(ServiceLifetime.Scoped);
 
-				services.AddTransient<CustomerRepository>();
-				services.AddTransient<EquipmentRepository>();
-				services.AddTransient<FaultRepository>();
-				services.AddTransient<PartRepository>();
-				services.AddTransient<ServiceTicketRepository>();
-				services.AddTransient<TicketPartRepository>();
-				services.AddTransient<UserRepository>();
-				services.AddTransient<PrimaryWindow>();
-				services.AddTransient<SignInWindow>();
-				services.AddTransient<CustomerView>();
-				services.AddTransient<EquipmentView>();
-				services.AddTransient<DataSeeder>();
-				services.AddTransient<MenuWindow>();
-				services.AddTransient<ServiceTicketView>();
-				services.AddTransient<UserView>();
-				services.AddTransient<PartsView>();
-				services.AddTransient<ProfileView>();
+				services.AddScoped<CustomerRepository>();
+				services.AddScoped<EquipmentRepository>();
+				services.AddScoped<FaultRepository>();
+				services.AddScoped<PartRepository>();
+				services.AddScoped<ServiceTicketRepository>();
+				services.AddScoped<TicketPartRepository>();
+				services.AddScoped<UserRepository>();
+				services.AddScoped<PrimaryWindow>();
+				services.AddScoped<SignInWindow>();
+				services.AddScoped<CustomerView>();
+				services.AddScoped<EquipmentView>();
+				services.AddScoped<DataSeeder>();
+				services.AddScoped<MenuWindow>();
+				services.AddScoped<ServiceTicketView>();
+				services.AddScoped<UserView>();
+				services.AddScoped<PartsView>();
+				services.AddScoped<ProfileView>();
 				services.AddSingleton<UserSession>();
             })
 			.Build();
 
 		await host.StartAsync();
 		scope = host.Services.CreateScope();
-		scope.ServiceProvider.GetRequiredService<SignInWindow>().Show();
 
 		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 		await seeder.SeedAsync();
+
+		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
 	}
 
 	protected override async void OnExit(ExitEventArgs e)
@@ -62,4 +63,3 @@ public partial class App : Application
 		base.OnExit(e);
 	}
 }
-

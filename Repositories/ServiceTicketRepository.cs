@@ -12,7 +12,7 @@ namespace ServiceManagerApp.Repositories
             return await DbSet.Include(st => st.User).Include(st => st.Equipment).Include(st => st.Faults).ToListAsync();
         }
 
-        public async Task UpdateStatusAsync(ServiceTicket ticket, Status status)
+        public async Task UpdateStatusAsync(ServiceTicket ticket, Status status, string changeLogEntry)
         {
             var trackedTicket = await DbSet.SingleOrDefaultAsync(st => st.Id == ticket.Id);
             if (trackedTicket is null)
@@ -21,6 +21,12 @@ namespace ServiceManagerApp.Repositories
             }
 
             trackedTicket.Status = status;
+            trackedTicket.ChangeLog.Add(changeLogEntry);
+            if (!ReferenceEquals(ticket, trackedTicket))
+            {
+                ticket.ChangeLog.Add(changeLogEntry);
+            }
+
             await context.SaveChangesAsync();
         }
 

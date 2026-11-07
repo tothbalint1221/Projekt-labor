@@ -15,4 +15,5 @@ public class ServiceTicket : BaseEntity
     public decimal Price { get; set; }
     public List<Fault> Faults { get; set; } = new();
     public List<TicketPart> TicketParts { get; set; } = new();
+    public List<string> ChangeLog { get; set; } = new();
 }

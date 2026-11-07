@@ -11,11 +11,11 @@ public partial class ServiceTicketDetails : Window
     private readonly ServiceTicket serviceTicket;
     private readonly ObservableCollection<Fault> faults = new();
     private readonly ObservableCollection<TicketPart> ticketParts = new();
+    private readonly ObservableCollection<string> changeLog = new();
     private readonly ServiceTicketRepository serviceTicketRepository;
     private readonly FaultRepository faultRepository;
     private readonly PartRepository partRepository;
     private readonly TicketPartRepository ticketPartRepository;
-    private readonly HashSet<ComboBox> updatingFaultStatuses = new();
     private bool isInitializing = true;
     private bool isUpdatingStatus;
 
@@ -30,12 +30,18 @@ public partial class ServiceTicketDetails : Window
         this.partRepository = partRepository;
         this.ticketPartRepository = ticketPartRepository;
 
+        foreach (var entry in serviceTicket.ChangeLog)
+        {
+            changeLog.Add(entry);
+        }
+
         txtTicketId.Text = serviceTicket.Id.ToString();
         txtEquipment.Text = $"{serviceTicket.Equipment.Brand} {serviceTicket.Equipment.Model} ({serviceTicket.Equipment.SerialNumber})".Trim();
         txtAssignedTo.Text = serviceTicket.User?.Name ?? "Unassigned";
         txtCost.Text = serviceTicket.LaborCost.ToString("0.00", CultureInfo.CurrentCulture);
         cmbStatus.ItemsSource = Enum.GetValues<Status>();
         cmbStatus.SelectedItem = serviceTicket.Status;
+        listboxChangeLog.ItemsSource = changeLog;
         UpdateAddButtons();
         isInitializing = false;
 
@@ -161,8 +167,10 @@ public partial class ServiceTicketDetails : Window
 
         try
         {
-            await serviceTicketRepository.UpdateStatusAsync(serviceTicket, selectedStatus);
+            var changeLogEntry = $"{DateTime.Now} - Status changed to: {selectedStatus}";
+            await serviceTicketRepository.UpdateStatusAsync(serviceTicket, selectedStatus, changeLogEntry);
             serviceTicket.Status = selectedStatus;
+            changeLog.Add(changeLogEntry);
             UpdateAddButtons();
 
             if (selectedStatus == Status.Finished)
@@ -194,45 +202,6 @@ public partial class ServiceTicketDetails : Window
         var canAddItems = serviceTicket.Status != Status.Finished;
         btnAddFault.IsEnabled = canAddItems;
         btnAddPart.IsEnabled = canAddItems;
-    }
-
-    private async void CmbFaultStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (sender is not ComboBox comboBox ||
-            updatingFaultStatuses.Contains(comboBox) ||
-            comboBox.DataContext is not Fault fault ||
-            e.AddedItems.Count != 1 ||
-            e.AddedItems[0] is not Status selectedStatus ||
-            e.RemovedItems.Count != 1 ||
-            e.RemovedItems[0] is not Status previousStatus ||
-            selectedStatus == previousStatus)
-        {
-            return;
-        }
-
-        updatingFaultStatuses.Add(comboBox);
-        comboBox.IsEnabled = false;
-
-        try
-        {
-            await faultRepository.UpdateAsync(fault);
-            fault.Status = selectedStatus;
-        }
-        catch (Exception ex)
-        {
-            fault.Status = previousStatus;
-            comboBox.SelectedItem = previousStatus;
-            MessageBox.Show(
-                $"Could not update the fault status:\n\n{ex.Message}",
-                "Fault Status Update Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
-        }
-        finally
-        {
-            comboBox.IsEnabled = true;
-            updatingFaultStatuses.Remove(comboBox);
-        }
     }
 
     private async void BtnDeleteFaultAsync(object sender, RoutedEventArgs e)

@@ -83,7 +83,8 @@ public partial class ServiceTicketView : UserControl
             {
                 UserId = userId,
                 EquipmentId = equipmentId,
-                IntakeDate = DateTime.Now
+                IntakeDate = DateTime.Now,
+                ChangeLog = [$"{DateTime.Now} - Ticket Created"]
             });
 
             await LoadServiceTicketsAsync();

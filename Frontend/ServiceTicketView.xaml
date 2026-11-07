@@ -18,10 +18,22 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
+        <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <ComboBox x:Name="cmbUsers" SelectedValuePath="Id" Width="250" Margin="5">
-            <ComboBox.ItemTemplate>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Assign To" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Equipment" Margin="10,0,0,4"/>
+
+            <ComboBox x:Name="cmbUsers" Grid.Row="1" Grid.Column="0" SelectedValuePath="Id" Width="250" Margin="5">
+                <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Id, StringFormat='[#{0}] '}"/>
@@ -31,8 +43,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ComboBox x:Name="cmbEquipments" SelectedValuePath="Id" Width="250" Margin="5">
-            <ComboBox.ItemTemplate>
+            <ComboBox x:Name="cmbEquipments" Grid.Row="1" Grid.Column="1" SelectedValuePath="Id" Width="250" Margin="5">
+                <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="{Binding Id, StringFormat='[#{0}] '}"/>
@@ -42,8 +54,8 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button x:Name="btnAddServiceTicket" Content="Add Ticket" Width="100" Margin="4" Click="BtnAddServiceTicketAsync"/>
-        </StackPanel>
+            <Button x:Name="btnAddServiceTicket" Grid.Row="1" Grid.Column="2" Content="Add Ticket" Width="100" Margin="4" Click="BtnAddServiceTicketAsync"/>
+        </Grid>
 
         <DataGrid x:Name="dataGridServiceTickets" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
