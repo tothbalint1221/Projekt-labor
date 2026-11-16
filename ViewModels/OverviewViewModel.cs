@@ -28,7 +28,7 @@ namespace ServiceManagerApp.ViewModels
         public string ActiveTitle =>
             _data.ShowAllTickets ? "All active tickets" : "Your active tickets";
 
-        public int AcceptCount => _data.AcceptedCount;
+        public int AcceptedCount => _data.AcceptedCount;
         public int DiagnosingCount => _data.DiagnosingCount;
         public int InRepairCount => _data.InRepairCount;
         public int FinishedCount => _data.FinishedCount;

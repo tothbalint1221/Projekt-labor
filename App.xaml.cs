@@ -30,8 +30,6 @@ public partial class App : Application
 				services.AddScoped<ServiceTicketRepository>();
 				services.AddScoped<TicketPartRepository>();
 				services.AddScoped<UserRepository>();
-				services.AddScoped<PrimaryWindow>();
-				services.AddScoped<SignInWindow>();
 				services.AddScoped<CustomerView>();
 				services.AddScoped<EquipmentView>();
 				services.AddScoped<DataSeeder>();
@@ -44,6 +42,10 @@ public partial class App : Application
 				services.AddScoped<OverviewViewModel>();
 				services.AddScoped<OverviewView>();
 				services.AddSingleton<UserSession>();
+
+                //Ezt ne változtasd, kijeneltkezéshez AddTransient kell!
+                services.AddTransient<SignInWindow>();
+				services.AddTransient<PrimaryWindow>();
             })
 			.Build();
 
