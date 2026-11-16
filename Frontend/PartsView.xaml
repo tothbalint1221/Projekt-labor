@@ -19,12 +19,27 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtPartName" Width="150" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name"/>
-            <TextBox x:Name="txtPartQuantity" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Quantity"/>
-            <TextBox x:Name="txtPartCost" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Cost"/>
-            <Button x:Name="btnAddPart" Content="Add Part" Width="100" Margin="4" Click="BtnAddPartAsync"/>
-        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Quantity" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Cost" Margin="10,0,0,4"/>
+
+            <TextBox x:Name="txtPartName" Grid.Row="1" Grid.Column="0" Width="150" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name"/>
+            <TextBox x:Name="txtPartQuantity" Grid.Row="1" Grid.Column="1" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Quantity"/>
+            <TextBox x:Name="txtPartCost" Grid.Row="1" Grid.Column="2" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Cost"/>
+            <Button x:Name="btnAddPart" Grid.Row="1" Grid.Column="3" Content="Add Part" Width="100" Margin="4" Click="BtnAddPartAsync"/>
+        </Grid>
 
         <DataGrid x:Name="dataGridParts" Grid.Row="2" Grid.Column="1" Margin="5" CellEditEnding="DataGrid_CellEditEnding" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>

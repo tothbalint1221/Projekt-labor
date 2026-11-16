@@ -19,13 +19,30 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtCustomerName" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name" />
-            <TextBox x:Name="txtCustomerPhone" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone" />
-            <TextBox x:Name="txtCustomerEmail" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email" />
-            <TextBox x:Name="txtCustomerAddress" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address" />
-            <Button x:Name="btnAddCustomer" Content="Add Customer" Width="100" Margin="4" Click="BtnAddCustomerAsync"/>
-        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Phone" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Email" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="Address" Margin="10,0,0,4"/>
+
+            <TextBox x:Name="txtCustomerName" Grid.Row="1" Grid.Column="0" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name" />
+            <TextBox x:Name="txtCustomerPhone" Grid.Row="1" Grid.Column="1" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone" />
+            <TextBox x:Name="txtCustomerEmail" Grid.Row="1" Grid.Column="2" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email" />
+            <TextBox x:Name="txtCustomerAddress" Grid.Row="1" Grid.Column="3" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address" />
+            <Button x:Name="btnAddCustomer" Grid.Row="1" Grid.Column="4" Content="Add Customer" Width="100" Margin="4" Click="BtnAddCustomerAsync"/>
+        </Grid>
 
         <DataGrid x:Name="dataGridCustomers" Grid.Row="2" Grid.Column="1" Margin="5" CellEditEnding="DataGrid_CellEditEnding" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>

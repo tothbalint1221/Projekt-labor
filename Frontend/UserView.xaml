@@ -19,15 +19,36 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,10">
-            <TextBox x:Name="txtUserName" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name"/>
-            <TextBox x:Name="txtUserPassword" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Password"/>
-            <TextBox x:Name="txtUserPhone" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone"/>
-            <TextBox x:Name="txtUserEmail" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email"/>
-            <TextBox x:Name="txtUserAddress" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address"/>
-            <ComboBox x:Name="cmbUserRole" Width="120" Margin="4"/>
-            <Button x:Name="btnAddUser" Content="Add User" Width="100" Margin="4" Click="BtnAddUserAsync"/>
-        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="Password" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Phone" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="3" Text="Email" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="Address" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="5" Text="Role" Margin="10,0,0,4"/>
+
+            <TextBox x:Name="txtUserName" Grid.Row="1" Grid.Column="0" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Name"/>
+            <TextBox x:Name="txtUserPassword" Grid.Row="1" Grid.Column="1" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Password"/>
+            <TextBox x:Name="txtUserPhone" Grid.Row="1" Grid.Column="2" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Phone"/>
+            <TextBox x:Name="txtUserEmail" Grid.Row="1" Grid.Column="3" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Email"/>
+            <TextBox x:Name="txtUserAddress" Grid.Row="1" Grid.Column="4" Width="100" Margin="4" Style="{StaticResource PlaceholderTextBox}" Tag="Address"/>
+            <ComboBox x:Name="cmbUserRole" Grid.Row="1" Grid.Column="5" Width="120" Margin="4"/>
+            <Button x:Name="btnAddUser" Grid.Row="1" Grid.Column="6" Content="Add User" Width="100" Margin="4" Click="BtnAddUserAsync"/>
+        </Grid>
         <DataGrid x:Name="dataGridUsers" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="*"/>

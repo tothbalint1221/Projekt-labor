@@ -37,8 +37,10 @@ public partial class ServiceTicketView : UserControl
     {
         try
         {
+            List<User> userList = await userRepository.GetAllAsync();
+
             var _serviceTickets = await serviceTicketRepository.GetAllAsync();
-            cmbUsers.ItemsSource = await userRepository.GetAllAsync();
+            cmbUsers.ItemsSource = userList.Where(u => u.Role.Equals(Role.Technician));
             cmbEquipments.ItemsSource = await equipmentRepository.GetAllAsync();
 
             serviceTickets.Clear();
