@@ -5,6 +5,7 @@ using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
 using ServiceManagerApp.Services.Overview;
 using ServiceManagerApp.Services.Users;
+using ServiceManagerApp.ViewModels;
 
 namespace ServiceManagerApp;
 
@@ -40,6 +41,8 @@ public partial class App : Application
 				services.AddScoped<PartsView>();
 				services.AddScoped<ProfileView>();
 				services.AddScoped<IOverviewService, OverviewService>();
+				services.AddScoped<OverviewViewModel>();
+				services.AddScoped<OverviewView>();
 				services.AddSingleton<UserSession>();
             })
 			.Build();
@@ -50,9 +53,10 @@ public partial class App : Application
 		var seeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
 		await seeder.SeedAsync();
 
-		scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
+		//scope.ServiceProvider.GetRequiredService<PrimaryWindow>().Show();
+		scope.ServiceProvider.GetRequiredService<SignInWindow>().Show();
 	}
-
+	 
 	protected override async void OnExit(ExitEventArgs e)
 	{
 		if (host != null)

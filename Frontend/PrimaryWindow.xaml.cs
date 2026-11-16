@@ -13,7 +13,8 @@ public partial class PrimaryWindow : Window
         InitializeComponent();
         _serviceProvider = serviceProvider;
 
-        NavigateTo("Customers");
+        //NavigateTo("Customers");
+        NavigateTo("OverView");
     }
 
     private void BtnNav_Click(object sender, RoutedEventArgs e)
@@ -50,7 +51,9 @@ public partial class PrimaryWindow : Window
             case "Profile":
                 MainContentArea.Content = _serviceProvider.GetRequiredService<ProfileView>();
                 break;
-
+            case "OverView":
+                MainContentArea.Content = _serviceProvider.GetRequiredService<OverviewView>();
+                break;
             default:
                 break;
         }
