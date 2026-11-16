@@ -12,6 +12,31 @@ namespace ServiceManagerApp.Repositories
             return await DbSet.Include(st => st.User).Include(st => st.Equipment).Include(st => st.Faults).ToListAsync();
         }
 
+        public async Task<List<ServiceTicket>> GetOpenTicketsAsync(int? userId)
+        {
+            var query = DbSet
+                .AsNoTracking()
+                .Include(st => st.User)
+                .Include(st => st.Equipment)
+                    .ThenInclude(e => e.Customer)
+                .Where(st => st.Status == Status.Accepted 
+                          || st.Status == Status.Diagnosing
+                          || st.Status == Status.InRepair
+                          || st.Status == Status.Finished
+                          );
+
+            if(userId is not null)
+            {
+                query = query.Where(st => st.UserId == userId);
+            }
+
+            return await query
+                .OrderBy(st => st.IntakeDate)
+                .ToListAsync();
+
+        }
+
+
         public async Task UpdateStatusAsync(ServiceTicket ticket, Status status, string changeLogEntry)
         {
             var trackedTicket = await DbSet.SingleOrDefaultAsync(st => st.Id == ticket.Id);
