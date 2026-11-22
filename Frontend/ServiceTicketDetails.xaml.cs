@@ -2,12 +2,14 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Windows;
 using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Services.Users;
 using System.Windows.Controls;
 
 namespace ServiceManagerApp.Frontend;
 
 public partial class ServiceTicketDetails : Window
 {
+
     private readonly ServiceTicket serviceTicket;
     private readonly ObservableCollection<Fault> faults = new();
     private readonly ObservableCollection<TicketPart> ticketParts = new();
@@ -16,19 +18,25 @@ public partial class ServiceTicketDetails : Window
     private readonly FaultRepository faultRepository;
     private readonly PartRepository partRepository;
     private readonly TicketPartRepository ticketPartRepository;
+    private readonly UserRepository userRepository;
+    private readonly UserSession userSession;
     private bool isInitializing = true;
     private bool isUpdatingStatus;
+    private bool isUpdatingAssignment;
 
     public Status[] StatusOptions { get; } = Enum.GetValues<Status>();
 
-    public ServiceTicketDetails(ServiceTicket serviceTicket, ServiceTicketRepository serviceTicketRepository, FaultRepository faultRepository, PartRepository partRepository, TicketPartRepository ticketPartRepository)
+    public ServiceTicketDetails(ServiceTicket serviceTicket, ServiceTicketRepository serviceTicketRepository, UserRepository userRepository, UserSession userSession, FaultRepository faultRepository, PartRepository partRepository, TicketPartRepository ticketPartRepository)
     {
         InitializeComponent();
         this.serviceTicket = serviceTicket;
         this.serviceTicketRepository = serviceTicketRepository;
+        this.userRepository = userRepository;
+        this.userSession = userSession;
         this.faultRepository = faultRepository;
         this.partRepository = partRepository;
         this.ticketPartRepository = ticketPartRepository;
+        cmbAssignedTo.IsEnabled = CanChangeAssignment();
 
         foreach (var entry in serviceTicket.ChangeLog)
         {
@@ -37,7 +45,6 @@ public partial class ServiceTicketDetails : Window
 
         txtTicketId.Text = serviceTicket.Id.ToString();
         txtEquipment.Text = $"{serviceTicket.Equipment.Brand} {serviceTicket.Equipment.Model} ({serviceTicket.Equipment.SerialNumber})".Trim();
-        txtAssignedTo.Text = serviceTicket.User?.Name ?? "Unassigned";
         txtCost.Text = serviceTicket.LaborCost.ToString("0.00", CultureInfo.CurrentCulture);
         cmbStatus.ItemsSource = Enum.GetValues<Status>();
         cmbStatus.SelectedItem = serviceTicket.Status;
@@ -50,10 +57,92 @@ public partial class ServiceTicketDetails : Window
             await LoadFaultsAsync();
             await LoadTicketPartsAsync();
             await LoadPriceAsync();
+            await LoadAssignedUsersAsync();
         };
 
     }
 
+    private async Task LoadAssignedUsersAsync()
+    {
+        try
+        {
+            var users = await userRepository.GetAllAsync();
+            var technicians = users.Where(user => user.Role == Role.Technician).ToList();
+
+            isUpdatingAssignment = true;
+            cmbAssignedTo.ItemsSource = technicians;
+            cmbAssignedTo.SelectedValue = serviceTicket.UserId ?? 0;
+            isUpdatingAssignment = false;
+        }
+        catch (Exception ex)
+        {
+            isUpdatingAssignment = false;
+            MessageBox.Show(
+                $"Could not load technicians:\n\n{ex.Message}",
+                "Technician Load Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+    }
+
+    private async void CmbAssignedTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (isInitializing || isUpdatingAssignment)
+        {
+            return;
+        }
+
+        if (!CanChangeAssignment())
+        {
+            cmbAssignedTo.SelectedValue = serviceTicket.UserId ?? 0;
+            return;
+        }
+
+        if (cmbAssignedTo.SelectedValue is not int selectedUserId)
+        {
+            return;
+        }
+
+        var assignedUserId = selectedUserId == 0 ? (int?)null : selectedUserId;
+        if (assignedUserId == serviceTicket.UserId)
+        {
+            return;
+        }
+
+        isUpdatingAssignment = true;
+        cmbAssignedTo.IsEnabled = false;
+        var previousUserId = serviceTicket.UserId;
+
+        try
+        {
+            User? selectedUser = cmbAssignedTo.SelectedItem as User;
+            var changeLogEntry = assignedUserId is null
+                ? $"{DateTime.Now} - Ticket unassigned"
+                : $"{DateTime.Now} - Assigned to: {selectedUser?.Name}";
+
+            await serviceTicketRepository.UpdateAssignmentAsync(serviceTicket, assignedUserId, changeLogEntry);
+            serviceTicket.UserId = assignedUserId;
+            serviceTicket.User = assignedUserId is null ? null : selectedUser;
+            changeLog.Add(changeLogEntry);
+        }
+        catch (Exception ex)
+        {
+            cmbAssignedTo.SelectedValue = previousUserId ?? 0;
+            MessageBox.Show(
+                $"Could not update the ticket assignment:\n\n{ex.Message}",
+                "Assignment Update Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            cmbAssignedTo.IsEnabled = CanChangeAssignment();
+            isUpdatingAssignment = false;
+        }
+    }
+
+    private bool CanChangeAssignment() =>
+        userSession.CurrentUser?.Role is Role.Admin or Role.Clerk;
 
     private async Task LoadFaultsAsync()
     {

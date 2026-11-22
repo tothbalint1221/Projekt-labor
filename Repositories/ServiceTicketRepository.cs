@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +65,24 @@ namespace ServiceManagerApp.Repositories
 
             trackedTicket.Price += laborCost - trackedTicket.LaborCost;
             trackedTicket.LaborCost = laborCost;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAssignmentAsync(ServiceTicket ticket, int? userId, string changeLogEntry)
+        {
+            var trackedTicket = await DbSet.SingleOrDefaultAsync(st => st.Id == ticket.Id);
+            if (trackedTicket is null)
+            {
+                throw new InvalidOperationException($"Service ticket {ticket.Id} could not be found.");
+            }
+
+            trackedTicket.UserId = userId;
+            trackedTicket.ChangeLog.Add(changeLogEntry);
+            if (!ReferenceEquals(ticket, trackedTicket))
+            {
+                ticket.ChangeLog.Add(changeLogEntry);
+            }
+
             await context.SaveChangesAsync();
         }
 

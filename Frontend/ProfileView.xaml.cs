@@ -1,4 +1,4 @@
-﻿using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Repositories;
 using ServiceManagerApp.Services.Users;
 using System;
 using System.Collections.Generic;
