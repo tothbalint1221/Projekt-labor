@@ -10,7 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
@@ -29,21 +29,9 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Assign To" Margin="10,0,0,4"/>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Equipment" Margin="10,0,0,4"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Equipment" Margin="10,0,0,4"/>
 
-            <ComboBox x:Name="cmbUsers" Grid.Row="1" Grid.Column="0" SelectedValuePath="Id" Width="250" Margin="5">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Id, StringFormat='[#{0}] '}"/>
-                            <TextBlock Text="{Binding Name}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-
-            <ComboBox x:Name="cmbEquipments" Grid.Row="1" Grid.Column="1" SelectedValuePath="Id" Width="250" Margin="5">
+            <ComboBox x:Name="cmbEquipments" Grid.Row="1" Grid.Column="0" SelectedValuePath="Id" Width="250" Margin="5">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
@@ -54,7 +42,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <Button x:Name="btnAddServiceTicket" Grid.Row="1" Grid.Column="2" Content="Add Ticket" Width="100" Margin="4" Click="BtnAddServiceTicketAsync"/>
+            <Button x:Name="btnAddServiceTicket" Grid.Row="1" Grid.Column="1" Content="Add Ticket" Width="100" Margin="4" Click="BtnAddServiceTicketAsync"/>
         </Grid>
 
         <DataGrid x:Name="dataGridServiceTickets" Grid.Row="2" Grid.Column="1" Margin="5" CanUserAddRows="False" AutoGenerateColumns="False">

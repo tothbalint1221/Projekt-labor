@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using Microsoft.IdentityModel.Tokens;
 using ServiceManagerApp.Frontend;
 using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Services.Users;
 
 namespace ServiceManagerApp;
 
@@ -15,16 +16,18 @@ public partial class ServiceTicketView : UserControl
 {
     private readonly EquipmentRepository equipmentRepository;
     private readonly UserRepository userRepository;
+    private readonly UserSession userSession;
     private readonly ServiceTicketRepository serviceTicketRepository;
     private readonly FaultRepository faultRepository;
     private readonly PartRepository partRepository;
     private readonly TicketPartRepository ticketPartRepository;
     private ObservableCollection<ServiceTicket> serviceTickets = new ObservableCollection<ServiceTicket>();
-    public ServiceTicketView(EquipmentRepository equipmentRepository, UserRepository userRepository, ServiceTicketRepository serviceTicketRepository, FaultRepository faultRepository, PartRepository partRepository, TicketPartRepository ticketPartRepository)
+    public ServiceTicketView(EquipmentRepository equipmentRepository, UserRepository userRepository, UserSession userSession, ServiceTicketRepository serviceTicketRepository, FaultRepository faultRepository, PartRepository partRepository, TicketPartRepository ticketPartRepository)
     {
         InitializeComponent();
         this.equipmentRepository = equipmentRepository;
         this.userRepository = userRepository;
+        this.userSession = userSession;
         this.serviceTicketRepository = serviceTicketRepository;
         this.faultRepository = faultRepository;
         this.partRepository = partRepository;
@@ -37,10 +40,7 @@ public partial class ServiceTicketView : UserControl
     {
         try
         {
-            List<User> userList = await userRepository.GetAllAsync();
-
             var _serviceTickets = await serviceTicketRepository.GetAllAsync();
-            cmbUsers.ItemsSource = userList.Where(u => u.Role.Equals(Role.Technician));
             cmbEquipments.ItemsSource = await equipmentRepository.GetAllAsync();
 
             serviceTickets.Clear();
@@ -75,15 +75,8 @@ public partial class ServiceTicketView : UserControl
                 return;
             }
 
-            if (cmbUsers.SelectedValue is not int userId)
-            {
-                MessageBox.Show("Please select an equipment.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
             await serviceTicketRepository.CreateAsync(new ServiceTicket
             {
-                UserId = userId,
                 EquipmentId = equipmentId,
                 IntakeDate = DateTime.Now,
                 ChangeLog = [$"{DateTime.Now} - Ticket Created"]
@@ -118,7 +111,7 @@ public partial class ServiceTicketView : UserControl
     {
         if (sender is Button button && button.DataContext is ServiceTicket selectedServiceTicket)
         {
-            var detailsWindow = new ServiceTicketDetails(selectedServiceTicket, serviceTicketRepository, faultRepository, partRepository, ticketPartRepository)
+            var detailsWindow = new ServiceTicketDetails(selectedServiceTicket, serviceTicketRepository, userRepository, userSession, faultRepository, partRepository, ticketPartRepository)
             {
                 Owner = Window.GetWindow(this)
             };

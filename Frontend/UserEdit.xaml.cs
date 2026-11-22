@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using ServiceManagerApp.Repositories;
 using ServiceManagerApp.Services.Users;
 

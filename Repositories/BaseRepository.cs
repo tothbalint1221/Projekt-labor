@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ServiceManagerApp.Entities;
 
 namespace ServiceManagerApp.Repositories

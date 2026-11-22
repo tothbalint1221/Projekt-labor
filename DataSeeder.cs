@@ -1,4 +1,4 @@
-﻿using ServiceManagerApp.Repositories;
+using ServiceManagerApp.Repositories;
 using ServiceManagerApp.Entities;
 using System.Diagnostics;
 
@@ -66,29 +66,38 @@ public class DataSeeder
         {
             new User
             {
-                Name = "Technician1",
+                Name = "Farkas Dániel",
                 Password = "tech123",
-                Phonenumber = "06301234567",
-                Email = "techguy1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 1",
+                Phonenumber = "+36 30 555 0101",
+                Email = "daniel.farkas@example.com",
+                Address = "8200 Veszprém, Minta utca 12.",
                 Role = Role.Technician
             },
             new User
             {
-                Name = "Clerk1",
+                Name = "Varga Eszter",
+                Password = "tech456",
+                Phonenumber = "+36 20 555 0102",
+                Email = "eszter.varga@example.com",
+                Address = "8200 Veszprém, Próba tér 4.",
+                Role = Role.Technician
+            },
+            new User
+            {
+                Name = "Tóth Réka",
                 Password = "clerk123",
-                Phonenumber = "06207654321",
-                Email = "clerkguy1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 3",
+                Phonenumber = "+36 70 555 0103",
+                Email = "reka.toth@example.com",
+                Address = "8200 Veszprém, Minta utca 8.",
                 Role = Role.Clerk
             },
             new User
             {
-                Name = "Admin1",
+                Name = "Szerviz Admin",
                 Password = "admin123",
-                Phonenumber = "0610101010",
-                Email = "admin1@gmail.com",
-                Address = "8200 Veszprem, Budapest ut 5",
+                Phonenumber = "+36 30 555 0104",
+                Email = "admin@example.com",
+                Address = "8200 Veszprém, Próba tér 1.",
                 Role = Role.Admin
             }
 
@@ -115,26 +124,26 @@ public class DataSeeder
         {
             new Customer
             {
-                Name = "Kovacs Lajos",
-                PhoneNumber = "0688123456",
-                Email = "kovacslajos@gmail.com",
-                Address = "8200 Veszprem, Kadartai ut 1",
+                Name = "Kovács Péter",
+                PhoneNumber = "+36 30 555 0201",
+                Email = "peter.kovacs@example.com",
+                Address = "8200 Veszprém, Minta utca 15.",
                 Created = DateTime.Now.AddDays(-30)
             },
             new Customer
             {
-                Name = "Kemeny Szilard",
-                PhoneNumber = "06704206769",
-                Email = "kemenyszilard@gmail.com",
-                Address = "8200 Veszprem, Kadartai ut 3",
+                Name = "Szabó Anna",
+                PhoneNumber = "+36 20 555 0202",
+                Email = "anna.szabo@example.com",
+                Address = "8200 Veszprém, Próba tér 7.",
                 Created = DateTime.Now.AddDays(-20)
             },
             new Customer
             {
-                Name = "Saul Goodman",
-                PhoneNumber = "+1-505-503-4455",
-                Email = "saulgoodman@gmail.com",
-                Address = "8200 Veszprem, Kadartai ut 5",
+                Name = "Nagy Gábor",
+                PhoneNumber = "+36 70 555 0203",
+                Email = "gabor.nagy@example.com",
+                Address = "8400 Ajka, Példa utca 9.",
                 Created = DateTime.Now.AddDays(-10)
             }
         };
@@ -160,33 +169,33 @@ public class DataSeeder
         {
             new Part
             {
-                PartName = "Tapegyseg 500W",
+                PartName = "ATX tápegység 550 W",
                 Quantity = 5,
-                PartCost = 5000.00m
+                PartCost = 22900m
             },
             new Part
             {
-                PartName = "Univerzalis LCD kijelzo",
-                Quantity = 3,
-                PartCost = 17000.00m
+                PartName = "SSD 1 TB",
+                Quantity = 4,
+                PartCost = 28900m
             },
             new Part
             {
-                PartName = "SSD 1TB",
-                Quantity = 1,
-                PartCost = 999999.99m
+                PartName = "DDR4 memória 16 GB",
+                Quantity = 8,
+                PartCost = 15900m
             },
             new Part
             {
-                PartName = "RAM 8GB",
+                PartName = "Laptop LCD panel 15,6 hüvelyk",
+                Quantity = 2,
+                PartCost = 49900m
+            },
+            new Part
+            {
+                PartName = "Hűtőventilátor 120 mm",
                 Quantity = 0,
-                PartCost = 99999.99m
-            },
-            new Part
-            {
-                PartName = "Huto ventilator",
-                Quantity = 12,
-                PartCost = 2500.00m
+                PartCost = 6900m
             }
         };
 
@@ -207,7 +216,9 @@ public class DataSeeder
             return;
         }
 
-        var customers = await _customerRepository.GetAllAsync();
+        var customers = (await _customerRepository.GetAllAsync())
+            .OrderBy(customer => customer.Id)
+            .ToList();
         if (customers.Count == 0)
             return;
 
@@ -217,17 +228,17 @@ public class DataSeeder
             {
                 CustomerId = customers[0].Id,
                 Category = "Laptop",
-                Brand = "Dell",
-                Model = "XPS 15",
-                SerialNumber = "DELL-XPS-001"
+                Brand = "Lenovo",
+                Model = "ThinkPad E14",
+                SerialNumber = "HU-VM-0001"
             },
             new Equipment
             {
                 CustomerId = customers[0].Id,
                 Category = "Desktop PC",
                 Brand = "HP",
-                Model = "ProDesk 400",
-                SerialNumber = "HP-PRO-001"
+                Model = "ProDesk 400 G6",
+                SerialNumber = "HU-VM-0002"
             }
         };
 
@@ -236,10 +247,10 @@ public class DataSeeder
             equipment.Add(new Equipment
             {
                 CustomerId = customers[1].Id,
-                Category = "Printer",
-                Brand = "Brother",
-                Model = "HL-L2350DW",
-                SerialNumber = "BROTHER-PRN-001"
+                Category = "Laptop",
+                Brand = "ASUS",
+                Model = "VivoBook 15",
+                SerialNumber = "HU-VM-0003"
             });
         }
 
@@ -248,10 +259,10 @@ public class DataSeeder
             equipment.Add(new Equipment
             {
                 CustomerId = customers[2].Id,
-                Category = "Server",
-                Brand = "Lenovo",
-                Model = "ThinkSystem SR650",
-                SerialNumber = "LENOVO-SRV-001"
+                Category = "Nyomtató",
+                Brand = "Brother",
+                Model = "HL-L2350DW",
+                SerialNumber = "HU-AJ-0001"
             });
         }
 
@@ -272,7 +283,9 @@ public class DataSeeder
             return;
         }
 
-        var tickets = await _serviceTicketRepository.GetAllAsync();
+        var tickets = (await _serviceTicketRepository.GetAllAsync())
+            .OrderBy(ticket => ticket.Id)
+            .ToList();
         if (tickets.Count == 0)
             return;
 
@@ -283,9 +296,9 @@ public class DataSeeder
             faults.Add(new Fault
             {
                 ServiceTicketId = tickets[0].Id,
-                FaultName = "Villogo kijelzo",
-                Diagnosis = "LCD panelen meghibasodott",
-                Repairs = "LCD panel kicserelve",
+                FaultName = "A laptop kijelzője nem ad képet",
+                Diagnosis = "A kijelző háttérvilágítása meghibásodott.",
+                Repairs = "Az LCD panel cseréje befejeződött."
             });
         }
 
@@ -294,9 +307,9 @@ public class DataSeeder
             faults.Add(new Fault
             {
                 ServiceTicketId = tickets[1].Id,
-                FaultName = "Gep nem kapcsol be",
-                Diagnosis = "Hibas tapegyseg",
-                Repairs = "Tapegyseg kicserelve",
+                FaultName = "A számítógép nem indul",
+                Diagnosis = "A tápegység instabil feszültséget ad le.",
+                Repairs = "A tápegység cseréje folyamatban van."
             });
         }
 
@@ -305,9 +318,9 @@ public class DataSeeder
             faults.Add(new Fault
             {
                 ServiceTicketId = tickets[2].Id,
-                FaultName = "Beragadt papir",
-                Diagnosis = "Papir beragadt az adagolo rendszerben",
-                Repairs = "Papir eltavolitva, adagolo rendszert kitisztitva",
+                FaultName = "A laptop időnként újraindul",
+                Diagnosis = "A készülék bevizsgálása folyamatban van.",
+                Repairs = string.Empty
             });
         }
 
@@ -344,68 +357,81 @@ public class DataSeeder
         }
 
         var users = await _userRepository.GetAllAsync();
-        var equipment = await _equipmentRepository.GetAllAsync();
+        var technicians = users
+            .Where(user => user.Role == Role.Technician)
+            .OrderBy(user => user.Id)
+            .ToList();
+        var equipment = (await _equipmentRepository.GetAllAsync())
+            .OrderBy(item => item.Id)
+            .ToList();
 
-        if (equipment.Count == 0 || users.Count == 0)
+        if (equipment.Count == 0 || technicians.Count == 0)
             return;
 
-        var firstIntakeDate = DateTime.Now.AddDays(-5);
-        var firstCompletionDate = DateTime.Now.AddDays(-2);
-        var secondIntakeDate = DateTime.Now.AddDays(-3);
-        var secondCompletionDate = DateTime.Now;
-        var thirdIntakeDate = DateTime.Now.AddDays(-1);
+        var firstIntakeDate = DateTime.Now.AddDays(-10);
+        var firstCompletionDate = DateTime.Now.AddDays(-7);
+        var secondIntakeDate = DateTime.Now.AddDays(-4);
+        var thirdIntakeDate = DateTime.Now.AddDays(-2);
         var tickets = new List<ServiceTicket>();
 
-        if (equipment.Count > 0 && users.Count > 0)
+        if (equipment.Count > 0)
         {
             tickets.Add(new ServiceTicket
             {
-                UserId = users[0].Id,
+                UserId = technicians[0].Id,
                 EquipmentId = equipment[0].Id,
                 IntakeDate = firstIntakeDate,
                 CompletionDate = firstCompletionDate,
                 Status = Status.Finished,
-                LaborCost = 5000.00m,
-                Price = 20000.00m, // THESE ARE EXAMPLES VALUES, WILL BE AUTO CALCULATED
+                LaborCost = 18000m,
+                Price = 67900m,
                 ChangeLog =
                 [
                     $"{firstIntakeDate} - Ticket Created",
+                    $"{firstIntakeDate} - Assigned to: {technicians[0].Name}",
                     $"{firstCompletionDate} - Status changed to: {Status.Finished}"
                 ]
             });
         }
 
-        if (equipment.Count > 1 && users.Count > 1)
+        if (equipment.Count > 1)
         {
+            var technician = technicians.Count > 1 ? technicians[1] : technicians[0];
             tickets.Add(new ServiceTicket
             {
-                UserId = users[1].Id,
+                UserId = technician.Id,
                 EquipmentId = equipment[1].Id,
                 IntakeDate = secondIntakeDate,
-                CompletionDate = secondCompletionDate,
-                Status = Status.Finished,
-                LaborCost = 5000.00m,
-                Price = 20000.00m,
+                CompletionDate = null,
+                Status = Status.InRepair,
+                LaborCost = 12000m,
+                Price = 34900m,
                 ChangeLog =
                 [
                     $"{secondIntakeDate} - Ticket Created",
-                    $"{secondCompletionDate} - Status changed to: {Status.Finished}"
+                    $"{secondIntakeDate} - Assigned to: {technician.Name}",
+                    $"{DateTime.Now.AddDays(-1)} - Status changed to: {Status.InRepair}"
                 ]
             });
         }
 
-        if (equipment.Count > 2 && users.Count > 2)
+        if (equipment.Count > 2)
         {
             tickets.Add(new ServiceTicket
             {
-                UserId = users[2].Id,
+                UserId = technicians[0].Id,
                 EquipmentId = equipment[2].Id,
                 IntakeDate = thirdIntakeDate,
                 CompletionDate = null,
-                Status = Status.Accepted,
-                LaborCost = 5000.00m,
-                Price = 20000.00m,
-                ChangeLog = [$"{thirdIntakeDate} - Ticket Created"]
+                Status = Status.Diagnosing,
+                LaborCost = 0m,
+                Price = 0m,
+                ChangeLog =
+                [
+                    $"{thirdIntakeDate} - Ticket Created",
+                    $"{thirdIntakeDate} - Assigned to: {technicians[0].Name}",
+                    $"{DateTime.Now.AddDays(-1)} - Status changed to: {Status.Diagnosing}"
+                ]
             });
         }
 
@@ -426,17 +452,21 @@ public class DataSeeder
             return;
         }
 
-        var tickets = await _serviceTicketRepository.GetAllAsync();
-        var parts = await _partRepository.GetAllAsync();
+        var tickets = (await _serviceTicketRepository.GetAllAsync())
+            .OrderBy(ticket => ticket.Id)
+            .ToList();
+        var parts = (await _partRepository.GetAllAsync())
+            .OrderBy(part => part.Id)
+            .ToList();
 
         var ticketParts = new List<TicketPart>();
 
-        if (tickets.Count > 0 && parts.Count > 1)
+        if (tickets.Count > 0 && parts.Count > 3)
         {
             ticketParts.Add(new TicketPart
             {
                 ServiceTicketId = tickets[0].Id,
-                PartId = parts[1].Id,
+                PartId = parts[3].Id,
                 Quantity = 1
             });
         }
