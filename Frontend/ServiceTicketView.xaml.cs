@@ -120,4 +120,65 @@ public partial class ServiceTicketView : UserControl
         }
     }
 
+    private async void BtnSendEmailAsync(object sender, RoutedEventArgs e)
+    {
+        if (sender is not Button button || button.DataContext is not ServiceTicket selectedServiceTicket)
+        {
+            return;
+        }
+
+        if (selectedServiceTicket.Status != Status.Finished)
+        {
+            MessageBox.Show(
+                "An email can only be sent when the service ticket is Finished.",
+                "Email Send Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
+        }
+
+        var customer = selectedServiceTicket.Equipment.Customer;
+        if (string.IsNullOrWhiteSpace(customer?.Email))
+        {
+            MessageBox.Show(
+                "The customer does not have an email address.",
+                "Email Send Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Warning);
+            return;
+        }
+
+        var equipmentName = $"{selectedServiceTicket.Equipment.Brand} {selectedServiceTicket.Equipment.Model} ({selectedServiceTicket.Equipment.SerialNumber})".Trim();
+        var emailSender = new EmailSender(
+            customer.Name,
+            customer.Email,
+            equipmentName,
+            selectedServiceTicket.Price);
+
+        button.IsEnabled = false;
+        try
+        {
+            await emailSender.SendAsync();
+            var changeLogEntry = $"{DateTime.Now} - Email sent to: {customer.Email}";
+            await serviceTicketRepository.AddEmailSentLogAsync(selectedServiceTicket, changeLogEntry);
+            MessageBox.Show(
+                "The email was sent successfully.",
+                "Email Sent",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(
+                $"Could not send the email:\n\n{ex.Message}",
+                "Email Send Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            button.IsEnabled = true;
+        }
+    }
+
 }

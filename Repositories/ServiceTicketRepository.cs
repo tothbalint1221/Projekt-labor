@@ -9,7 +9,12 @@ namespace ServiceManagerApp.Repositories
     {
         public override async Task<List<ServiceTicket>> GetAllAsync()
         {
-            return await DbSet.Include(st => st.User).Include(st => st.Equipment).Include(st => st.Faults).ToListAsync();
+            return await DbSet
+                .Include(st => st.User)
+                .Include(st => st.Equipment)
+                    .ThenInclude(equipment => equipment.Customer)
+                .Include(st => st.Faults)
+                .ToListAsync();
         }
 
         public async Task<List<ServiceTicket>> GetOpenTicketsAsync(int? userId)
@@ -77,6 +82,23 @@ namespace ServiceManagerApp.Repositories
             }
 
             trackedTicket.UserId = userId;
+            trackedTicket.ChangeLog.Add(changeLogEntry);
+            if (!ReferenceEquals(ticket, trackedTicket))
+            {
+                ticket.ChangeLog.Add(changeLogEntry);
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task AddEmailSentLogAsync(ServiceTicket ticket, string changeLogEntry)
+        {
+            var trackedTicket = await DbSet.SingleOrDefaultAsync(st => st.Id == ticket.Id);
+            if (trackedTicket is null)
+            {
+                throw new InvalidOperationException($"Service ticket {ticket.Id} could not be found.");
+            }
+
             trackedTicket.ChangeLog.Add(changeLogEntry);
             if (!ReferenceEquals(ticket, trackedTicket))
             {
