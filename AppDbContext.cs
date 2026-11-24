@@ -87,9 +87,8 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(tp => tp.Id);
 
-            // Egyedi összetett index: egy alkatrész nem szerepelhet duplán egy munkalapon
-            entity.HasIndex(tp => new { tp.ServiceTicketId, tp.PartId })
-                .IsUnique();
+            // Egy alkatrész több ár-rögzítéssel is szerepelhet ugyanazon a munkalapon.
+            entity.HasIndex(tp => new { tp.ServiceTicketId, tp.PartId });
 
             entity.HasOne(tp => tp.ServiceTicket)
                 .WithMany(st => st.TicketParts)

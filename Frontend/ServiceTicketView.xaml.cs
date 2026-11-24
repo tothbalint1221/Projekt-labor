@@ -127,10 +127,10 @@ public partial class ServiceTicketView : UserControl
             return;
         }
 
-        if (selectedServiceTicket.Status != Status.Finished)
+        if (selectedServiceTicket.Status is not (Status.Diagnosing or Status.InRepair or Status.Finished or Status.Cancelled))
         {
             MessageBox.Show(
-                "An email can only be sent when the service ticket is Finished.",
+                "An email cannot be sent for the current service ticket status.",
                 "Email Send Error",
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
@@ -153,27 +153,46 @@ public partial class ServiceTicketView : UserControl
             customer.Name,
             customer.Email,
             equipmentName,
-            selectedServiceTicket.Price);
+            selectedServiceTicket.Price,
+            selectedServiceTicket.Status);
 
         button.IsEnabled = false;
         try
         {
-            await emailSender.SendAsync();
+            try
+            {
+                await emailSender.SendAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Could not send the email:\n\n{ex.Message}",
+                    "Email Send Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                return;
+            }
+
             var changeLogEntry = $"{DateTime.Now} - Email sent to: {customer.Email}";
-            await serviceTicketRepository.AddEmailSentLogAsync(selectedServiceTicket, changeLogEntry);
+            try
+            {
+                await serviceTicketRepository.AddEmailSentLogAsync(selectedServiceTicket, changeLogEntry);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"The email was sent, but its history entry could not be saved:\n\n{ex.Message}",
+                    "Email History Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
             MessageBox.Show(
                 "The email was sent successfully.",
                 "Email Sent",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(
-                $"Could not send the email:\n\n{ex.Message}",
-                "Email Send Error",
-                MessageBoxButton.OK,
-                MessageBoxImage.Error);
         }
         finally
         {

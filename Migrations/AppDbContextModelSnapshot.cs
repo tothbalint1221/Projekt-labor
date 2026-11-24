@@ -214,8 +214,7 @@ namespace ServiceManagerApp.Migrations
 
                     b.HasIndex("PartId");
 
-                    b.HasIndex("ServiceTicketId", "PartId")
-                        .IsUnique();
+                    b.HasIndex("ServiceTicketId", "PartId");
 
                     b.ToTable("TicketParts");
                 });

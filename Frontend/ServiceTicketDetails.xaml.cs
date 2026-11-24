@@ -253,26 +253,40 @@ public partial class ServiceTicketDetails : Window
 
         isUpdatingStatus = true;
         cmbStatus.IsEnabled = false;
+        var previousStatus = serviceTicket.Status;
+        var previousCompletionDate = serviceTicket.CompletionDate;
+        var previousChangeLogCount = serviceTicket.ChangeLog.Count;
 
         try
         {
             var changeLogEntry = $"{DateTime.Now} - Status changed to: {selectedStatus}";
-            await serviceTicketRepository.UpdateStatusAsync(serviceTicket, selectedStatus, changeLogEntry);
+            bool finishedToHandedover = (serviceTicket.Status == Status.Finished && selectedStatus == Status.HandedOver) ? true : false;
             serviceTicket.Status = selectedStatus;
-            changeLog.Add(changeLogEntry);
-            UpdateAddButtons();
 
-            if (selectedStatus == Status.Finished)
+            if (selectedStatus is Status.Finished or Status.HandedOver)
             {
-                serviceTicket.CompletionDate = DateTime.Now;
+                if (!finishedToHandedover)
+                {
+                    serviceTicket.CompletionDate = DateTime.Now;
+                }
             } else
             {
                 serviceTicket.CompletionDate = null;
             }
+            await serviceTicketRepository.UpdateStatusAsync(serviceTicket, selectedStatus, changeLogEntry);
+            changeLog.Add(changeLogEntry);
+            UpdateAddButtons();
         }
         catch (Exception ex)
         {
-            cmbStatus.SelectedItem = serviceTicket.Status;
+            serviceTicket.Status = previousStatus;
+            serviceTicket.CompletionDate = previousCompletionDate;
+            while (serviceTicket.ChangeLog.Count > previousChangeLogCount)
+            {
+                serviceTicket.ChangeLog.RemoveAt(serviceTicket.ChangeLog.Count - 1);
+            }
+            cmbStatus.SelectedItem = previousStatus;
+            UpdateAddButtons();
             MessageBox.Show(
                 $"Could not update the service ticket status:\n\n{ex.Message}",
                 "Status Update Error",
@@ -288,7 +302,7 @@ public partial class ServiceTicketDetails : Window
 
     private void UpdateAddButtons()
     {
-        var canAddItems = serviceTicket.Status != Status.Finished;
+        var canAddItems = serviceTicket.Status is not (Status.Finished or Status.HandedOver or Status.Cancelled);
         btnAddFault.IsEnabled = canAddItems;
         btnAddPart.IsEnabled = canAddItems;
     }
@@ -410,6 +424,7 @@ public partial class ServiceTicketDetails : Window
             });
 
             txtQuantity.Clear();
+            cmbParts.SelectedIndex = -1;
             await LoadTicketPartsAsync();
             await LoadPriceAsync();
         }
