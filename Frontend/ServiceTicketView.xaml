@@ -72,7 +72,16 @@
                                     <Style TargetType="Button">
                                         <Setter Property="IsEnabled" Value="False"/>
                                         <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="Diagnosing">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="InRepair">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
                                             <DataTrigger Binding="{Binding Status}" Value="Finished">
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Cancelled">
                                                 <Setter Property="IsEnabled" Value="True"/>
                                             </DataTrigger>
                                         </Style.Triggers>
