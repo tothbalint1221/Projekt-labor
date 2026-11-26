@@ -41,6 +41,34 @@ namespace ServiceManagerApp.Repositories
 
         }
 
+        private const int MaxSearchResults = 50;
+
+        public async Task<List<ServiceTicket>> SearchTicketsAsync(string searchText)
+        {
+            string text = searchText.Trim();
+            //ha a beirt szöveg szám pl 12, akkor ticket számára is keresünk
+            bool textIsNumber = int.TryParse(text, out int ticketId);
+
+            return await DbSet
+                .AsNoTracking()
+                .Include(ticket => ticket.User)
+                .Include(ticket => ticket.Equipment)
+                    .ThenInclude(equipment => equipment.Customer)
+                .Where(ticket => 
+                    (textIsNumber && ticket.Id == ticketId)
+                    || ticket.Equipment.Customer.Name.Contains(text)
+                    || ticket.Equipment.Customer.PhoneNumber.Contains(text)
+                    || ticket.Equipment.Customer.Email.Contains(text)
+                    || ticket.Equipment.Brand.Contains(text)
+                    || ticket.Equipment.Model.Contains(text)
+                    || ticket.Equipment.SerialNumber.Contains(text)
+                
+                )
+                .OrderByDescending(ticket => ticket.IntakeDate)
+                .Take(MaxSearchResults)
+                .ToListAsync() ;
+        }
+
 
         public async Task UpdateStatusAsync(ServiceTicket ticket, Status status, string changeLogEntry)
         {
