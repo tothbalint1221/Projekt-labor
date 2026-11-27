@@ -54,8 +54,11 @@ namespace ServiceManagerApp.Services.Overview
             {
                 return new List<TicketSummary>();
             }
+            // A Technician csak a saját ticketjei között keres
+            // ugyanúgy, mint az Overview-ban
+            int? userId = user.Role == Role.Technician ? user.Id : null;
 
-            var tickets = await ticketRepository.SearchTicketsAsync(searchText);
+            var tickets = await ticketRepository.SearchTicketsAsync(searchText, userId);
 
             return tickets.Select(ToSummary).ToList();
         }

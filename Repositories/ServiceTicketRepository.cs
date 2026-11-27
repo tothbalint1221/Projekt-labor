@@ -43,7 +43,7 @@ namespace ServiceManagerApp.Repositories
 
         private const int MaxSearchResults = 50;
 
-        public async Task<List<ServiceTicket>> SearchTicketsAsync(string searchText)
+        public async Task<List<ServiceTicket>> SearchTicketsAsync(string searchText, int? userId)
         {
             string text = searchText.Trim();
             //ha a beirt szöveg szám pl 12, akkor ticket számára is keresünk
@@ -65,6 +65,7 @@ namespace ServiceManagerApp.Repositories
                     || (ticket.User != null && ticket.User.Name.Contains(text))
 
                 )
+                .Where(ticket => userId == null || ticket.UserId == userId)
                 .OrderByDescending(ticket => ticket.IntakeDate)
                 .Take(MaxSearchResults)
                 .ToListAsync() ;
