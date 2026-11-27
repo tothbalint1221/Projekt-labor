@@ -9,5 +9,8 @@ namespace ServiceManagerApp.Services.Overview
     {
         Task<OverviewData> GetOverviewAsync(SignedInUser? user);
 
+        Task<IReadOnlyList<TicketSummary>> SearchTicketsAsync(SignedInUser? use,
+            string searchText);
+
     }
 }

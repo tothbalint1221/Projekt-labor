@@ -44,6 +44,23 @@ namespace ServiceManagerApp.Services.Overview
 
         }
 
+        private const int MinSearchLength = 2;
+
+        public async Task<IReadOnlyList<TicketSummary>> SearchTicketsAsync(SignedInUser? user,
+            string searchText)
+        {
+            //Kijelentkezve, vagy 2 karakternél rövidebb szöveget nem keresünk
+            if( user == null || searchText.Trim().Length < MinSearchLength)
+            {
+                return new List<TicketSummary>();
+            }
+
+            var tickets = await ticketRepository.SearchTicketsAsync(searchText);
+
+            return tickets.Select(ToSummary).ToList();
+        }
+
+
         private static TicketSummary ToSummary(ServiceTicket ticket) => new()
         {
             Id = ticket.Id,
