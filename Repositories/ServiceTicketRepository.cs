@@ -62,7 +62,8 @@ namespace ServiceManagerApp.Repositories
                     || ticket.Equipment.Brand.Contains(text)
                     || ticket.Equipment.Model.Contains(text)
                     || ticket.Equipment.SerialNumber.Contains(text)
-                
+                    || (ticket.User != null && ticket.User.Name.Contains(text))
+
                 )
                 .OrderByDescending(ticket => ticket.IntakeDate)
                 .Take(MaxSearchResults)

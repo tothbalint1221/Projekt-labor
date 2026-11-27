@@ -58,6 +58,25 @@
             <Setter Property="Visibility" Value="Collapsed"/>
         </Style>
 
+        <!-- Keresés közben eltűnik -->
+        <Style x:Key="NormalLists" TargetType="StackPanel">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowSearchResults}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Csak keresés közben látszik -->
+        <Style x:Key="SearchSection" TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ShowSearchResults}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="StatusBadge" TargetType="Border">
             <Setter Property="CornerRadius" Value="4"/>
             <Setter Property="Padding" Value="8,2"/>
@@ -73,6 +92,12 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Status}" Value="Finished">
                     <Setter Property="Background" Value="#EAF3DE"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="HandedOver">
+                    <Setter Property="Background" Value="#F1EFE8"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Cancelled">
+                    <Setter Property="Background" Value="#FCEBEB"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -93,6 +118,14 @@
                 <DataTrigger Binding="{Binding Status}" Value="Finished">
                     <Setter Property="Text" Value="Finished"/>
                     <Setter Property="Foreground" Value="#27500A"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="HandedOver">
+                    <Setter Property="Text" Value="Handed over"/>
+                    <Setter Property="Foreground" Value="#444441"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Status}" Value="Cancelled">
+                    <Setter Property="Text" Value="Cancelled"/>
+                    <Setter Property="Foreground" Value="#791F1F"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -169,6 +202,7 @@
             <TextBlock Text="Search customers, equipment or tickets" Margin="0,0,0,4"/>
             <TextBox Style="{StaticResource PlaceholderTextBox}"
                      Tag="Name, phone, serial number or ticket ID"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged, Delay=300}"
                      Padding="8,6" FontSize="14"
                      IsEnabled="{Binding IsSignedIn, FallbackValue=False}"/>
 
@@ -200,56 +234,87 @@
                 </Border>
             </UniformGrid>
 
-            <Grid Margin="0,24,0,8">
-                <TextBlock Text="{Binding ActiveTitle, FallbackValue='Active tickets'}" Style="{StaticResource SectionTitle}"/>
-                <TextBlock Text="{Binding ActiveTickets.Count, StringFormat='{}{0} tickets', FallbackValue='0 tickets'}"
-                           Style="{StaticResource SectionNote}"/>
-            </Grid>
-            <Border Style="{StaticResource ListFrame}">
-                <StackPanel>
-                    <Control Template="{StaticResource TicketHeader}" Focusable="False"/>
-                    <ItemsControl x:Name="ActiveList"
-                                  ItemsSource="{Binding ActiveTickets}"
-                                  ItemTemplate="{StaticResource TicketRow}"
-                                  d:ItemsSource="{d:SampleData ItemCount=3}"/>
-                    <TextBlock Text="No active tickets.">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource EmptyText}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasItems, ElementName=ActiveList}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </StackPanel>
-            </Border>
+            <!-- Normál nézet: aktív és átvehető ticketek -->
+            <StackPanel Style="{StaticResource NormalLists}">
+                <Grid Margin="0,24,0,8">
+                    <TextBlock Text="{Binding ActiveTitle, FallbackValue='Active tickets'}" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="{Binding ActiveTickets.Count, StringFormat='{}{0} tickets', FallbackValue='0 tickets'}"
+                               Style="{StaticResource SectionNote}"/>
+                </Grid>
+                <Border Style="{StaticResource ListFrame}">
+                    <StackPanel>
+                        <Control Template="{StaticResource TicketHeader}" Focusable="False"/>
+                        <ItemsControl x:Name="ActiveList"
+                                      ItemsSource="{Binding ActiveTickets}"
+                                      ItemTemplate="{StaticResource TicketRow}"
+                                      d:ItemsSource="{d:SampleData ItemCount=3}"/>
+                        <TextBlock Text="No active tickets.">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource EmptyText}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasItems, ElementName=ActiveList}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
 
-            <Grid Margin="0,24,0,8">
-                <TextBlock Text="Ready for pickup" Style="{StaticResource SectionTitle}"/>
-                <TextBlock Text="Call the customer" Style="{StaticResource SectionNote}"/>
-            </Grid>
-            <Border Style="{StaticResource ListFrame}">
-                <StackPanel>
-                    <Control Template="{StaticResource TicketHeader}" Focusable="False"/>
-                    <ItemsControl x:Name="ReadyList"
-                                  ItemsSource="{Binding ReadyTickets}"
-                                  ItemTemplate="{StaticResource TicketRow}"
-                                  d:ItemsSource="{d:SampleData ItemCount=2}"/>
-                    <TextBlock Text="Nothing is waiting for pickup.">
-                        <TextBlock.Style>
-                            <Style TargetType="TextBlock" BasedOn="{StaticResource EmptyText}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding HasItems, ElementName=ReadyList}" Value="False">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                </StackPanel>
-            </Border>
+                <Grid Margin="0,24,0,8">
+                    <TextBlock Text="Ready for pickup" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="Call the customer" Style="{StaticResource SectionNote}"/>
+                </Grid>
+                <Border Style="{StaticResource ListFrame}">
+                    <StackPanel>
+                        <Control Template="{StaticResource TicketHeader}" Focusable="False"/>
+                        <ItemsControl x:Name="ReadyList"
+                                      ItemsSource="{Binding ReadyTickets}"
+                                      ItemTemplate="{StaticResource TicketRow}"
+                                      d:ItemsSource="{d:SampleData ItemCount=2}"/>
+                        <TextBlock Text="Nothing is waiting for pickup.">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource EmptyText}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasItems, ElementName=ReadyList}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Keresés közben: találatok -->
+            <StackPanel Style="{StaticResource SearchSection}">
+                <Grid Margin="0,24,0,8">
+                    <TextBlock Text="Search results" Style="{StaticResource SectionTitle}"/>
+                    <TextBlock Text="{Binding SearchResults.Count, StringFormat='{}{0} tickets', FallbackValue='0 tickets'}"
+                               Style="{StaticResource SectionNote}"/>
+                </Grid>
+                <Border Style="{StaticResource ListFrame}">
+                    <StackPanel>
+                        <Control Template="{StaticResource TicketHeader}" Focusable="False"/>
+                        <ItemsControl x:Name="SearchList"
+                                      ItemsSource="{Binding SearchResults}"
+                                      ItemTemplate="{StaticResource TicketRow}"/>
+                        <TextBlock Text="No matching tickets.">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource EmptyText}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HasItems, ElementName=SearchList}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

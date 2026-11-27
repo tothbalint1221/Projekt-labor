@@ -4,6 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using ServiceManagerApp.Services.Overview;
 using ServiceManagerApp.Services.Users;
+using System.Drawing.Printing;
 
 namespace ServiceManagerApp.ViewModels
 {
@@ -32,9 +33,26 @@ namespace ServiceManagerApp.ViewModels
         public int DiagnosingCount => _data.DiagnosingCount;
         public int InRepairCount => _data.InRepairCount;
         public int FinishedCount => _data.FinishedCount;
-
+        private string _searchText = string.Empty;
+        private IReadOnlyList<TicketSummary> _searchResults = new List<TicketSummary>();
         public IReadOnlyList<TicketSummary> ActiveTickets => _data.ActiveTickets;
         public IReadOnlyList<TicketSummary> ReadyTickets => _data.ReadyTickets;
+        public IReadOnlyList<TicketSummary> SearchResults => _searchResults;
+
+        // Ha van beírt szöveg, a két lista helyett a találatok látszanak.
+        public bool ShowSearchResults => !string.IsNullOrWhiteSpace(_searchText);
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                OnPropertyChanged(nameof(SearchText));
+                RunSearch();
+            }
+        }
+
 
         public async Task LoadOverviewAsync()
         {
@@ -49,6 +67,36 @@ namespace ServiceManagerApp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty)); 
 
         }
+
+        private async void RunSearch()
+        {
+            string text = _searchText;
+
+            try
+            {
+                var results = await _overviewService
+                    .SearchTicketsAsync(_userSession.CurrentUser, text);
+
+                if(text != _searchText)
+                {
+                    return;
+                }
+
+                _searchResults = results;
+
+            }catch
+            {
+                _searchResults = new List<TicketSummary>();
+            }
+
+            OnPropertyChanged(nameof(SearchResults));
+            OnPropertyChanged(nameof(ShowSearchResults));
+
+
+        }
+
+        private void OnPropertyChanged(string propertyName) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
     }
 }
