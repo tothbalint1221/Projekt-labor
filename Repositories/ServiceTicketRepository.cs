@@ -17,6 +17,18 @@ namespace ServiceManagerApp.Repositories
                 .ToListAsync();
         }
 
+        public async Task<ServiceTicket?> GetTicketWithDetailsAsync(int ticketId)
+        {
+            return await DbSet
+                .Include(ticket => ticket.User)
+                .Include (ticket => ticket.Equipment)
+                    .ThenInclude (equipment => equipment.Customer)
+                .Include(ticket => ticket.Faults)
+                .SingleOrDefaultAsync(ticket => ticket.Id == ticketId);
+
+        }
+
+
         public async Task<List<ServiceTicket>> GetOpenTicketsAsync(int? userId)
         {
             var query = DbSet
@@ -45,7 +57,7 @@ namespace ServiceManagerApp.Repositories
 
         public async Task<List<ServiceTicket>> SearchTicketsAsync(string searchText, int? userId)
         {
-            string text = searchText.Trim();
+            string text = searchText.Trim().ToLower();
             //ha a beirt szöveg szám pl 12, akkor ticket számára is keresünk
             bool textIsNumber = int.TryParse(text, out int ticketId);
 

@@ -166,7 +166,10 @@
                                Foreground="#777777" VerticalAlignment="Center"/>
 
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding CustomerName}" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock TextTrimming="CharacterEllipsis">
+                            <Run Text="{Binding CustomerName, Mode=OneWay}"/>
+                            <Run Text="{Binding CustomerPhone, Mode=OneWay, StringFormat='Tel.: {0}'}" Foreground="#777777"/>
+                        </TextBlock>
                         <TextBlock Foreground="#777777" FontSize="12" TextTrimming="CharacterEllipsis">
                             <Run Text="{Binding EquipmentName, Mode=OneWay}"/>
                             <Run Text="·"/>
@@ -186,7 +189,8 @@
                                TextTrimming="CharacterEllipsis"/>
 
                     <Button Grid.Column="5" Content="Details" Padding="8,3"
-                            HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Click="BtnDetails_Click"/>
                 </Grid>
             </Border>
         </DataTemplate>

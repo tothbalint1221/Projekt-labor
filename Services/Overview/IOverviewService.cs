@@ -12,5 +12,7 @@ namespace ServiceManagerApp.Services.Overview
         Task<IReadOnlyList<TicketSummary>> SearchTicketsAsync(SignedInUser? use,
             string searchText);
 
+        Task<ServiceTicket?> GetTicketAsync(int ticketId);
+
     }
 }

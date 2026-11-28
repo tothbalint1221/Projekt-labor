@@ -98,5 +98,11 @@ namespace ServiceManagerApp.ViewModels
         private void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        public async Task<ServiceTicket?> GetTicketAsync(int ticketId)
+        {
+            return await _overviewService.GetTicketAsync(ticketId);
+        }
+
+
     }
 }

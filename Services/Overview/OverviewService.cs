@@ -76,5 +76,10 @@ namespace ServiceManagerApp.Services.Overview
             UserId = ticket.UserId,
             AssignedUserName = ticket.User?.Name
         };
+
+        public async Task<ServiceTicket?> GetTicketAsync(int ticketId)
+        {
+            return await ticketRepository.GetTicketWithDetailsAsync(ticketId);
+        }
     }
 }
