@@ -40,7 +40,7 @@ namespace ServiceManagerApp.ViewModels
         public IReadOnlyList<TicketSummary> SearchResults => _searchResults;
 
         // Ha van beírt szöveg, a két lista helyett a találatok látszanak.
-        public bool ShowSearchResults => !string.IsNullOrWhiteSpace(_searchText);
+        public bool ShowSearchResults => _searchText.Trim().Length >= OverviewService.MinSearchLength;
 
         public string SearchText
         {
@@ -65,6 +65,11 @@ namespace ServiceManagerApp.ViewModels
                 : $"{user.Name} - {user.Role}";
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty)); 
+
+            if(ShowSearchResults)
+            {
+                RunSearch();
+            }
 
         }
 

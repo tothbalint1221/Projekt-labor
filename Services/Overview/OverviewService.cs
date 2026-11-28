@@ -44,7 +44,7 @@ namespace ServiceManagerApp.Services.Overview
 
         }
 
-        private const int MinSearchLength = 2;
+        public const int MinSearchLength = 2;
 
         public async Task<IReadOnlyList<TicketSummary>> SearchTicketsAsync(SignedInUser? user,
             string searchText)
